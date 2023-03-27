@@ -13,13 +13,13 @@
 
   <name>adelante-compiler-frontend</name>
   <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://github.com/tom65536/adelante</url>
 
-  <properties>
+  <!--properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-  </properties>
+  </properties-->
 
   <dependencies>
     <dependency>

@@ -13,8 +13,6 @@
     
   <name>adelante-parent</name>
     
-  <!-- FIXME change it to the project's website -->
-    
   <url>https://github.com/tom65536/adelante</url>
     
   <properties>
@@ -109,7 +107,13 @@
           <version>2.8.2</version>
                   
         </plugin>
-                
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        
+              
         <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
                 
         <plugin>

@@ -1,0 +1,20 @@
+/*
+ *
+ */
+
+PARSER_BEGIN(AdelanteParser)
+package com.github.tom65536.adelante.parser;
+
+/**
+ *
+ */
+public final class AdelanteParser {
+
+}
+PARSER_END(AdelanteParser)
+
+void program() :
+{}
+{
+    "+"
+}

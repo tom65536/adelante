@@ -16,5 +16,38 @@ PARSER_END(AdelanteParser)
 void program() :
 {}
 {
-    "+"
+    (packet())*
+    (packet_body())?
+}
+
+void packet_file() :
+{}
+{
+    packet()
+}
+
+void packet() :
+{}
+{
+    packet_head()
+    (packet_body())?
+    packet_tail()
+}
+
+void packet_head() :
+{}
+{
+    "..."
+}
+
+void packet_tail() :
+{}
+{
+    "..."
+}
+
+void packet_body() :
+{}
+{
+    "+++"
 }

@@ -47,17 +47,29 @@ void packet_head() :
 {}
 {
     [obsoletion()]
-    <KW_PACKET> <IDENTIFIER> (<NL>)*
+    <KW_PACKET> identifier() (<NL>)*
     (uses_clause() (<NL>)*)*
-    (<KW_REQUIRES> protocol_instances() (<NL>)*)*
-    (<KW_ENSURES> protocol_instances() (<NL>)*)*
+    (packet_requires())*
+    (packet_ensures())*
     (documentation())*
+}
+
+void packet_requires() :
+{}
+{
+    <KW_REQUIRES> protocol_instances() (<NL>)?
+}
+
+void packet_ensures() :
+{}
+{
+    <KW_ENSURES> protocol_instances() (<NL>)*
 }
 
 void packet_tail() :
 {}
 {
-    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [<IDENTIFIER>]
+    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()]
 }
 
 void packet_body() :
@@ -75,7 +87,7 @@ void uses_clause() :
 void packet_usage() :
 {}
 {
-    <IDENTIFIER>
+    identifier()
     [<KW_IN> <TEXT_LITERAL>]
     [use_transforms()]
 }
@@ -85,8 +97,8 @@ void use_transforms() :
 {
     "(" (
         use_rename_list()
-        [<KW_WITHOUT> without_clause()]
-      | <KW_ONLY> only_clause()
+        [without_clause()]
+      | only_clause()
     ) ")"
 }
 
@@ -105,19 +117,19 @@ void use_rename() :
 void without_clause() :
 {}
 {
-    "+++"
+    <KW_WITHOUT> "+++"
 }
 
 void only_clause() :
 {}
 {
-    "+++"
+    <KW_ONLY> "+++"
 }
 
 void import_item() :
 {}
 {
-      <IDENTIFIER>
+      identifier_ref()
     | operator_name()
 }
 
@@ -151,6 +163,17 @@ void operator_name() :
     "+++"
 }
 
+void identifier() :
+{}
+{
+    <IDENTIFIER>
+}
+
+void identifier_ref() :
+{}
+{
+    <IDENTIFIER> [<ELLIPSIS>]
+}
 
 TOKEN : {
     <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]>
@@ -159,6 +182,7 @@ TOKEN : {
 // Keywords
 TOKEN :{
       <RESERVED_SEMICOLON : ";">
+    | <ELLIPSIS : "...">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_DOC : "DOC" | "DOCUMENTATION">

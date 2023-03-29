@@ -69,7 +69,56 @@ void packet_body() :
 void uses_clause() :
 {}
 {
-    "USES +++"
+    <KW_USES> packet_usage() ("," packet_usage())
+}
+
+void packet_usage() :
+{}
+{
+    <IDENTIFIER>
+    [<KW_IN> <TEXT_LITERAL>]
+    [use_transforms()]
+}
+
+void use_transforms() :
+{}
+{
+    "(" (
+        use_rename_list()
+        [<KW_WITHOUT> without_clause()]
+      | <KW_ONLY> only_clause()
+    ) ")"
+}
+
+void use_rename_list() :
+{}
+{
+    use_rename() ("," use_rename())*
+}
+
+void use_rename() :
+{}
+{
+    import_item() <KW_AS> import_item()
+}
+
+void without_clause() :
+{}
+{
+    "+++"
+}
+
+void only_clause() :
+{}
+{
+    "+++"
+}
+
+void import_item() :
+{}
+{
+      <IDENTIFIER>
+    | operator_name()
 }
 
 void protocol_instances() :
@@ -96,6 +145,13 @@ void reason() :
     <KW_BECAUSE> <DOCUMENTATION> (<NL>)*
 }
 
+void operator_name() :
+{}
+{
+    "+++"
+}
+
+
 TOKEN : {
     <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]>
 }
@@ -103,6 +159,7 @@ TOKEN : {
 // Keywords
 TOKEN :{
       <RESERVED_SEMICOLON : ";">
+    | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
     | <KW_END : "END">
@@ -110,9 +167,13 @@ TOKEN :{
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
+    | <KW_IN : "IN">
     | <KW_OBSOLETE : "OBSOLETE">
+    | <KW_ONLY : "ONLY">
     | <KW_PACKET : "PACKET">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
+    | <KW_USES : "USES" | "USE">
+    | <KW_WITHOUT : "WITHOUT">
 
     // -- generated --
     |<#MEDIAL : [
@@ -1019,4 +1080,14 @@ TOKEN : {
               ~["\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]
             | <ESCAPED_NL>
         )*>
+    | <#TEXT_CONTENTS :
+        (
+              ~["\"", "`",
+                "\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]
+            | <ESCAPED_NL>
+        )*>  
+    | <TEXT_LITERAL : "\"" <TEXT_CONTENTS> "\"">
+    | <TEXT_HEAD : "\"" <TEXT_CONTENTS> "`">
+    | <TEXT_MID : "`" <TEXT_CONTENTS> "`">
+    | <TEXT_TAIL : "`" <TEXT_CONTENTS> "\"">
 }

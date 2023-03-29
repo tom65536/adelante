@@ -75,7 +75,8 @@ void packet_tail() :
 void packet_body() :
 {}
 {
-    "+++"
+      bottom_up_part() [root() [top_down_part()]]
+    | root() [top_down_part()]
 }
 
 void uses_clause() :
@@ -117,13 +118,21 @@ void use_rename() :
 void without_clause() :
 {}
 {
-    <KW_WITHOUT> "+++"
+    <KW_WITHOUT> import_item() ("," import_item())*
 }
 
 void only_clause() :
 {}
 {
-    <KW_ONLY> "+++"
+    <KW_ONLY> opt_rename()
+    ("," opt_rename())*
+}
+
+void opt_rename():
+{}
+{
+    import_item()
+    [<KW_AS> import_item()]
 }
 
 void import_item() :
@@ -131,6 +140,38 @@ void import_item() :
 {
       identifier_ref()
     | operator_name()
+}
+
+void bottom_up_part() :
+{}
+{
+    "bup +++"
+}
+
+void root() :
+{}
+{
+      LOOKAHEAD(2) refinement()
+    | paragraph()
+}
+
+void top_down_part() :
+{}
+{
+    refinement()
+    [(<NL>)+ [top_down_part()]]
+}
+
+void refinement() :
+{}
+{
+    identifier() ":" (<NL>)*
+    [LOOKAHEAD(2) paragraph()]
+}
+void paragraph() :
+{}
+{
+    "paragraph +++"
 }
 
 void protocol_instances() :

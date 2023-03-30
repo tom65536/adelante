@@ -259,26 +259,65 @@ TOKEN : {
     <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]>
 }
 
-// Keywords
 TOKEN :{
       <RESERVED_SEMICOLON : ";">
     | <ELLIPSIS : "...">
+    | <ASSIGN : ":=" | "\u2254">
+    | <LARR : "<-" | "\u2190">
+    | <RARR : "->" | "\u2192"
+    | <LT : "<">
+    | <GT : ">">
+    | <LE : "<=" | "\u2264">
+    | <GE : ">=" | "\u2265">
+    | <NE : "<>" | "\u2260">
+    | <EQ : "=">
+    | <BOXED_LT : "[<]" | "\u2343"> 
+    | <BOXED_GT : "[>]" | "\u2344">
+    | <BOXED_LE : "[<=]">
+    | <BOXED_GE : "[>=]">
+    | <BOXED_NE : "[<>]" | "\u236F">
+    | <BOXED_EQ : "[=]" | "\u2338">
+    | <CIRCLED_LT : "(<)" | "\u29C0"> 
+    | <CIRCLED_GT : "(>)" | "\u29C1">
+    | <CIRCLED_LE : "(<=)">
+    | <CIRCLED_GE : "(>=)">
+    | <CIRCLED_NE : "(<>)">
+    | <CIRCLED_EQ : "(=)" | "\u229C">
+    | <BOXED_QUEST : "[?]" | "\u2370">
+    | <BOXED_COLON : "[:]" | "\u2360">
+    | <BOXED_QUOTE : "[']" | "\u235E">
+    | <BOXED_CARET : "[^]" | "\u2353">
+    | <BOXED_LARR : "[<-]" | "\u2347">
+    | <BOXED_RARR : "[->]" | "\u2348">
+    | <BOXED_SLASH : "[/]" | "\u2341">
+    | <BOXED_PLUS : "[+]" | "\u229E">
+    | <BOXED_MINUS : "[-]" | "\u229F">
+    | <BOXED_TIMES : "[><]" | "\u22A0">
+    | <BOXED_DOT : "[.]" | "\u22A1">
+    | <BOXED_AST : "[*]" | "\u29C6">
+    | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_CHECK : "CHECK">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
+    | <KW_ELSE : "ELSE">
     | <KW_END : "END">
     | <KW_ENDEXAMPLE : "ENDEXAMPLE">
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
+    | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
+    | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_ONLY : "ONLY">
+    | <KW_OR : "OR">
     | <KW_PACKET : "PACKET">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
+    | <KW_THEN : "THEN">
     | <KW_USES : "USES" | "USE">
     | <KW_WITHOUT : "WITHOUT">
+    | <KW_XOR : "XOR">
 
     // -- generated --
     |<#MEDIAL : [

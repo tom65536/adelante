@@ -261,16 +261,29 @@ TOKEN : {
 
 TOKEN :{
       <RESERVED_SEMICOLON : ";">
-    | <ELLIPSIS : "...">
+    | <ELLIPSIS : "..." | "\u2026">
+    | <RANGE : ".." | "\u2025">
     | <ASSIGN : ":=" | "\u2254">
     | <LARR : "<-" | "\u2190">
-    | <RARR : "->" | "\u2192"
+    | <RARR : "->" | "\u2192">
+    | <LRARR : "<->" | "\u2194">
     | <LT : "<">
     | <GT : ">">
     | <LE : "<=" | "\u2264">
     | <GE : ">=" | "\u2265">
     | <NE : "<>" | "\u2260">
     | <EQ : "=">
+    | <STARSHIP: "<=>" | "\u2A8B" | "\u2A8C">
+    | <BAT : ">=<">
+    | <IN : "\u2208">
+    | <NOT_IN : "\u2209">
+    | <SLASH : "/">
+    | <SLASH_SLASH : "//">
+    | <AST : "*">
+    | <AST_AST : "**">
+    | <AST_SLASH : "*/">
+    | <SLASH_AST : "/*">
+    | <TIMES : "><" | "\u00D7">
     | <BOXED_LT : "[<]" | "\u2343"> 
     | <BOXED_GT : "[>]" | "\u2344">
     | <BOXED_LE : "[<=]">
@@ -299,6 +312,7 @@ TOKEN :{
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_CHECK : "CHECK">
+    | <KW_DIV : "DIV">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
     | <KW_ELSE : "ELSE">
     | <KW_END : "END">
@@ -308,6 +322,7 @@ TOKEN :{
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
+    | <KW_MOD : "MOD">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_ONLY : "ONLY">

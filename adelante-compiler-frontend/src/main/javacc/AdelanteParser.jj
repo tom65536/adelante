@@ -280,10 +280,15 @@ TOKEN :{
     | <SLASH : "/">
     | <SLASH_SLASH : "//">
     | <AST : "*">
+    | <CIRCLED_TIMES : "(><)" | "\u2297">
+    | <CIRCLED_AST : "(*)" | "\u229B">
+    | <CIRCLED_DOT : "(.)" | "\u2299">
+    | <CIRCLED_SLASH : "(/)" | "\u2298">
     | <AST_AST : "**">
-    | <AST_SLASH : "*/">
-    | <SLASH_AST : "/*">
+    | <AST_SLASH : "*/" | "\u2238">
+    | <SLASH_AST : "/*" | "\u2A2A">
     | <TIMES : "><" | "\u00D7">
+    | <PERCENT : "%">
     | <BOXED_LT : "[<]" | "\u2343"> 
     | <BOXED_GT : "[>]" | "\u2344">
     | <BOXED_LE : "[<=]">
@@ -308,6 +313,14 @@ TOKEN :{
     | <BOXED_TIMES : "[><]" | "\u22A0">
     | <BOXED_DOT : "[.]" | "\u22A1">
     | <BOXED_AST : "[*]" | "\u29C6">
+    | <PLUS : "+">
+    | <MINUS : "-">
+    | <PLUS_PLUS : "++">
+    | <MINUS_MINUS : "--">
+    | <PLUS_MINUS : "+-" | "\u00B1">
+    | <MINUS_PLUS : "-+" | "\u2213">
+    | <CIRCLED_PLUS : "(+)" | "\u2295">
+    | <CIRCLED_MINUS : "(-)" | "\u2296">
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">

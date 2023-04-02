@@ -321,6 +321,22 @@ TOKEN :{
     | <MINUS_PLUS : "-+" | "\u2213">
     | <CIRCLED_PLUS : "(+)" | "\u2295">
     | <CIRCLED_MINUS : "(-)" | "\u2296">
+    | <CARET : "^">
+    | <LL : "<<" | "\u2AA1">
+    | <GG : ">>" | "\u2AA2">
+    | <LLL : "<<<" | "\u2AF7">
+    | <EXCLAM : "!">
+    | <QUEST : "?">
+    | <QQ : "??" | "\u2047">
+    | <EE : "!!" | "\u203C">
+    | <QEX : "?!" | "\u2048">
+    | <EXQ : "!?" | "\u2049">
+    | <GGG : ">>>" | "\u2AF8">
+    | <BAR : "|">
+    | <AMP : "&">
+    | <BAR_BAR : "||">
+    | <AMP_AMP : "&&">
+    | <CARET_CARET : "^^">
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">

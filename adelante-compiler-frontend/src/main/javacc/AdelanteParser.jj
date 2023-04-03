@@ -316,7 +316,27 @@ void bounds() :
 void dimension() :
 {}
 {
-    "{" "}"
+    "{" dim_expression() "}"
+}
+
+void dim_expression() :
+{}
+{
+    dim_factor()
+    ((<AST>|<SLASH>) dim_factor())*
+}
+
+void dim_factor() :
+{}
+{
+    dim_atom() [[sign()] decimal_literal() [<SLASH> decimal_literal()]]
+}
+
+void dim_atom() :
+{}
+{
+    identifier_ref()
+    | "(" dim_expression() ")"
 }
 
 void obsoletion() :
@@ -343,6 +363,12 @@ void operator_name() :
     "+++"
 }
 
+void sign() :
+{}
+{
+    <PLUS> | <MINUS>
+}
+
 void identifier() :
 {}
 {
@@ -359,6 +385,19 @@ void nl() :
 {}
 {
     (<NL>)+
+}
+
+void decimal_literal() :
+{}
+{
+    <DECIMAL_LITERAL>
+}
+
+void integer_denotation() :
+{}
+{
+    (<DECIMAL_LITERAL> | <RADIX_LITERAL>)
+    [dimension()]
 }
 
 TOKEN : {
@@ -1387,9 +1426,16 @@ TOKEN : {
               ~["\"", "`",
                 "\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]
             | <ESCAPED_NL>
-        )*>  
+        )*>
+    | <#DIGIT : ["0"-"9"]>
+    | <#ALPHA : ["A"-"Z", "a"-"z"]>
+    | <#ALNUM : <DIGIT> | <ALPHA> >
     | <TEXT_LITERAL : "\"" <TEXT_CONTENTS> "\"">
     | <TEXT_HEAD : "\"" <TEXT_CONTENTS> "`">
     | <TEXT_MID : "`" <TEXT_CONTENTS> "`">
     | <TEXT_TAIL : "`" <TEXT_CONTENTS> "\"">
+    | <DECIMAL_LITERAL : (<DIGIT>)+ ((<MEDIAL>)+ (<DIGIT>)+)*>
+    | <RADIX_LITERAL : <DECIMAL_LITERAL> "@"
+        (<ALNUM>)+ ((<MEDIAL>)+ (<ALNUM>)+)*>
+ 
 }

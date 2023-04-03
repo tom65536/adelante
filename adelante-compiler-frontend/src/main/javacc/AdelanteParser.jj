@@ -23,7 +23,7 @@ void packets_or_packet_body() :
 {}
 {
       packet() [nl() [packets_or_packet_body()]] 
-    | packet_body() [nl()]
+    | [uses_clause()] packet_body() [nl()]
 }
 
 void packet_file() :
@@ -210,7 +210,23 @@ void expression() :
 void object_decl() :
 {}
 {
-    "object"
+    type_declarer() (
+        <KW_VAR> identifier() [initializer()]
+        | <KW_CONST> identifier() initializer()
+    )
+    | (<KW_VAR> | <KW_CONST>) identifier() initializer()
+}
+
+void initializer() :
+{}
+{
+    "::" expression()
+}
+
+void type_declarer() :
+{}
+{
+    "typed"
 }
 
 void obsoletion() :
@@ -341,6 +357,7 @@ TOKEN :{
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_CHECK : "CHECK">
+    | <KW_CONST : "CONST">
     | <KW_DIV : "DIV">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
     | <KW_ELSE : "ELSE">
@@ -360,6 +377,7 @@ TOKEN :{
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
     | <KW_THEN : "THEN">
     | <KW_USES : "USES" | "USE">
+    | <KW_VAR : "VAR">
     | <KW_WITHOUT : "WITHOUT">
     | <KW_XOR : "XOR">
 

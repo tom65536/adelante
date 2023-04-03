@@ -298,7 +298,9 @@ void bool_type() :
 void named_type() :
 {}
 {
-    "type name"
+    identifier_ref()
+    ["(" type_declarer()
+      ("," type_declarer())* ")"]
 }
 
 void void_type() :
@@ -400,6 +402,27 @@ void integer_denotation() :
     [dimension()]
 }
 
+void real_denotation() :
+{}
+{
+    <REAL_LITERAL> [dimension()]
+}
+
+void bool_denotation() :
+{}
+{
+    <KW_TRUE> | <KW_FALSE>
+}
+
+void text_denotation() :
+{}
+{
+    <TEXT_LITERAL>
+    | <TEXT_HEAD> [nl()] [expression()] [nl()]
+      (<TEXT_MID> [nl()] [expression()] [nl()])*
+      <TEXT_TAIL>
+}
+
 TOKEN : {
     <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]>
 }
@@ -496,6 +519,7 @@ TOKEN :{
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
+    | <KW_FALSE : "FALSE">
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
     | <KW_INT : "INT" ("EGER")?>
@@ -510,6 +534,7 @@ TOKEN :{
     | <KW_STRUCT : "STRUCT">
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
+    | <KW_TRUE : "TRUE">
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">
     | <KW_VOID : "VOID">
@@ -1430,6 +1455,10 @@ TOKEN : {
     | <#DIGIT : ["0"-"9"]>
     | <#ALPHA : ["A"-"Z", "a"-"z"]>
     | <#ALNUM : <DIGIT> | <ALPHA> >
+    | <#MANTISSA : <DECIMAL_LITERAL> "." <DECIMAL_LITERAL> >
+    | <#EXPONENT : ("E" | "e") 
+        (<PLUS> | <MINUS>)?
+        <DECIMAL_LITERAL> >
     | <TEXT_LITERAL : "\"" <TEXT_CONTENTS> "\"">
     | <TEXT_HEAD : "\"" <TEXT_CONTENTS> "`">
     | <TEXT_MID : "`" <TEXT_CONTENTS> "`">
@@ -1437,5 +1466,8 @@ TOKEN : {
     | <DECIMAL_LITERAL : (<DIGIT>)+ ((<MEDIAL>)+ (<DIGIT>)+)*>
     | <RADIX_LITERAL : <DECIMAL_LITERAL> "@"
         (<ALNUM>)+ ((<MEDIAL>)+ (<ALNUM>)+)*>
+    | <REAL_LITERAL :
+        <MANTISSA> (<EXPONENT>)?
+      | <DECIMAL_LITERAL> <EXPONENT> >
  
 }

@@ -418,8 +418,8 @@ void text_denotation() :
 {}
 {
     <TEXT_LITERAL>
-    | <TEXT_HEAD> [nl()] [expression()] [nl()]
-      (<TEXT_MID> [nl()] [expression()] [nl()])*
+    | <TEXT_HEAD> [expression()] [nl()]
+      (<TEXT_MID> [expression()] [nl()])*
       <TEXT_TAIL>
 }
 

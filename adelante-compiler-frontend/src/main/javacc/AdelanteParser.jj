@@ -226,7 +226,97 @@ void initializer() :
 void type_declarer() :
 {}
 {
-    "typed"
+    cell_type_declarer()
+    ("[" index_type() ("," index_type())* "]")*
+}
+
+void index_type() :
+{}
+{
+    type_declarer()
+    | bounds()
+}
+
+void cell_type_declarer() :
+{}
+{
+    primitive_type()
+    | named_type()
+    | struct_type()
+}
+
+void struct_type() :
+{}
+{
+    <KW_STRUCT> "("
+        fields() ("," fields())*
+    ")"
+}
+
+void fields() :
+{}
+{
+    "fields +++"
+}
+
+void primitive_type() :
+{}
+{
+    int_type()
+    | real_type()
+    | text_type()
+    | bool_type()
+    | void_type()
+}
+
+void int_type() :
+{}
+{
+    <KW_INT>
+    ["(" bounds() ")"]
+    [dimension()]
+}
+
+void real_type() :
+{}
+{
+    <KW_REAL> [dimension()]
+}
+
+void text_type() :
+{}
+{
+    <KW_TEXT>
+}
+
+void bool_type() :
+{}
+{
+    <KW_BOOL>
+}
+
+void named_type() :
+{}
+{
+    "type name"
+}
+
+void void_type() :
+{}
+{
+    <KW_VOID>
+}
+
+void bounds() :
+{}
+{
+    "0 .. 10"
+}
+
+void dimension() :
+{}
+{
+    "{" "}"
 }
 
 void obsoletion() :
@@ -356,6 +446,7 @@ TOKEN :{
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
+    | <KW_BOOL : "BOOL" ("EAN")?>
     | <KW_CHECK : "CHECK">
     | <KW_CONST : "CONST">
     | <KW_DIV : "DIV">
@@ -368,16 +459,21 @@ TOKEN :{
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
+    | <KW_INT : "INT" ("EGER")?>
     | <KW_MOD : "MOD">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_ONLY : "ONLY">
     | <KW_OR : "OR">
     | <KW_PACKET : "PACKET">
+    | <KW_REAL : "REAL">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
+    | <KW_STRUCT : "STRUCT">
+    | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">
+    | <KW_VOID : "VOID">
     | <KW_WITHOUT : "WITHOUT">
     | <KW_XOR : "XOR">
 

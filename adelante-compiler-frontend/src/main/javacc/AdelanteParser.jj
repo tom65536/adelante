@@ -362,7 +362,7 @@ void reason() :
 void operator_name() :
 {}
 {
-    assignment_op()
+    LOOKAHEAD(2) assignment_op()
     | simple_operator_name()
     | comp_op()
 }
@@ -370,7 +370,7 @@ void operator_name() :
 void assignment_op() :
 {}
 {
-    LOOKAHEAD(2) [simple_operator_name()] <EQ>
+    LOOKAHEAD(2) simple_operator_name() <EQ>
     | <ASSIGN>
 }
 

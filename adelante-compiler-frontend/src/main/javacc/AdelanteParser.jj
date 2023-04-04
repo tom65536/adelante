@@ -382,6 +382,7 @@ void simple_operator_name() :
     | conjunct_op()
     | numeric_op()
     | arith_op()
+    | prod_op()
 }
 
 void abstract_bin_op() :
@@ -435,6 +436,20 @@ void arith_op() :
     | <PLUS_PLUS> | <MINUS_MINUS>
     | <CIRCLED_PLUS> | <CIRCLED_MINUS>
     | <BOXED_PLUS> | <BOXED_MINUS>
+}
+
+void prod_op() :
+{}
+{
+    <AST> | <SLASH>
+    | <KW_DIV> | <KW_MOD>
+    | <TIMES> | <PERCENT>
+    | <AST_SLASH> | <SLASH_AST>
+    | <CIRCLED_AST> | <CIRCLED_SLASH>
+    | <CIRCLED_TIMES> | <CIRCLED_DOT>
+    | <BOXED_AST> | <BOXED_SLASH>
+    | <BOXED_TIMES> | <BOXED_DOT>
+    | <BOXED_COLON>
 }
 
 void sign() :

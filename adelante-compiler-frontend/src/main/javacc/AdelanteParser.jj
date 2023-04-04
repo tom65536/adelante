@@ -380,6 +380,7 @@ void simple_operator_name() :
     abstract_bin_op()
     | disjunct_op()
     | conjunct_op()
+    | numeric_op()
 }
 
 void abstract_bin_op() :
@@ -417,6 +418,13 @@ void comp_op() :
     | <CIRCLED_LT> | <CIRCLED_GT>
     | <CIRCLED_LE> | <CIRCLED_GE>
     | <CIRCLED_EQ> | <CIRCLED_NE>
+}
+
+void numeric_op() :
+{}
+{
+    <STARSHIP> | <BAT>
+    | <TILDE>
 }
 
 void sign() :
@@ -497,6 +505,7 @@ TOKEN :{
     | <EQ : "=">
     | <STARSHIP: "<=>" | "\u2A8B" | "\u2A8C">
     | <BAT : ">=<">
+    | <TILDE : "~">
     | <IN : "\u2208">
     | <NOT_IN : "\u2209">
     | <SLASH : "/">

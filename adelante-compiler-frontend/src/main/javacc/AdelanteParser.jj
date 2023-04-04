@@ -204,7 +204,75 @@ void expression_statement() :
 void expression() :
 {}
 {
-    "ex"
+    abstract_bin_ex() [assignment_op() expression()]
+    | terminator()
+    | continuator()
+    | repetition()
+}
+
+void abstract_bin_ex() :
+{}
+{
+    disjunct_ex() (abstract_bin_op() disjunct_ex())*
+    | abstract_bin_op() disjunct_ex()
+}
+
+void disjunct_ex() :
+{}
+{
+    conjunct_ex() (disjunct_op() conjunct_ex())*
+    | disjunct_op() conjunct_ex()
+}
+
+void conjunct_ex() :
+{}
+{
+    comp_ex() (conjunct_op() comp_ex())*
+    | conjunct_op() comp_ex()
+}
+
+void comp_ex() :
+{}
+{
+    numeric_ex() (comp_op() numeric_ex())*
+    | comp_op() numeric_ex()
+}
+
+void numeric_ex() :
+{}
+{
+    "+++ num"
+}
+
+void terminator() :
+{}
+{
+    <KW_LEAVE> [unit_ref()]
+    [<KW_WITH> expression()]
+}
+
+void continuator() :
+{}
+{
+    <KW_CONTINUE> [loop_ref()]
+}
+
+void repetition() :
+{}
+{
+    "+++ rep"
+}
+
+void unit_ref() :
+{}
+{
+    "+++"
+}
+
+void loop_ref() :
+{}
+{
+    [<DECIMAL_LITERAL>] <KW_OUTER>
 }
 
 void object_decl() :
@@ -312,7 +380,7 @@ void void_type() :
 void bounds() :
 {}
 {
-    "0 .. 10"
+    "0 .. 10 +++"
 }
 
 void dimension() :
@@ -624,6 +692,7 @@ TOKEN :{
     | <KW_BOOL : "BOOL" ("EAN")?>
     | <KW_CHECK : "CHECK">
     | <KW_CONST : "CONST">
+    | <KW_CONTINUE : "CONTINUE">
     | <KW_DIV : "DIV">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
     | <KW_ELSE : "ELSE">
@@ -636,11 +705,13 @@ TOKEN :{
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
     | <KW_INT : "INT" ("EGER")?>
+    | <KW_LEAVE : "LEAVE">
     | <KW_MOD : "MOD">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_ONLY : "ONLY">
     | <KW_OR : "OR">
+    | <KW_OUTER : "OUTER">
     | <KW_PACKET : "PACKET">
     | <KW_REAL : "REAL">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
@@ -651,6 +722,7 @@ TOKEN :{
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">
     | <KW_VOID : "VOID">
+    | <KW_WITH : "WITH">
     | <KW_WITHOUT : "WITHOUT">
     | <KW_XOR : "XOR">
 

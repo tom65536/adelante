@@ -381,6 +381,7 @@ void simple_operator_name() :
     | disjunct_op()
     | conjunct_op()
     | numeric_op()
+    | arith_op()
 }
 
 void abstract_bin_op() :
@@ -425,6 +426,15 @@ void numeric_op() :
 {
     <STARSHIP> | <BAT>
     | <TILDE>
+}
+
+void arith_op() :
+{}
+{
+    <PLUS> | <MINUS>
+    | <PLUS_PLUS> | <MINUS_MINUS>
+    | <CIRCLED_PLUS> | <CIRCLED_MINUS>
+    | <BOXED_PLUS> | <BOXED_MINUS>
 }
 
 void sign() :

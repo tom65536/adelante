@@ -364,6 +364,7 @@ void operator_name() :
 {
     assignment_op()
     | simple_operator_name()
+    | comp_op()
 }
 
 void assignment_op() :
@@ -401,6 +402,21 @@ void conjunct_op() :
 {}
 {
     <KW_AND> [<KW_THEN>]
+}
+
+void comp_op() :
+{}
+{
+    <LT> | <GT> | <LE> | <GE>
+    | <EQ> | <NE>
+    | LOOKAHEAD(2) [<KW_NOT>] <KW_IN>
+    | <IN> | <NOT_IN>
+    | <BOXED_GT> | <BOXED_LT>
+    | <BOXED_LE> | <BOXED_GE>
+    | <BOXED_EQ> | <BOXED_NE>
+    | <CIRCLED_LT> | <CIRCLED_GT>
+    | <CIRCLED_LE> | <CIRCLED_GE>
+    | <CIRCLED_EQ> | <CIRCLED_NE>
 }
 
 void sign() :

@@ -213,35 +213,82 @@ void expression() :
 void abstract_bin_ex() :
 {}
 {
-    disjunct_ex() (abstract_bin_op() disjunct_ex())*
-    | abstract_bin_op() disjunct_ex()
+    [abstract_bin_op()] disjunct_ex()
+    (abstract_bin_op() disjunct_ex())*
 }
 
 void disjunct_ex() :
 {}
 {
-    conjunct_ex() (disjunct_op() conjunct_ex())*
-    | disjunct_op() conjunct_ex()
+    [disjunct_op()] conjunct_ex()
+    (disjunct_op() conjunct_ex())*
 }
 
 void conjunct_ex() :
 {}
 {
-    comp_ex() (conjunct_op() comp_ex())*
-    | conjunct_op() comp_ex()
+    [conjunct_op()] comp_ex()
+    (conjunct_op() comp_ex())*
 }
 
 void comp_ex() :
 {}
 {
-    numeric_ex() (comp_op() numeric_ex())*
-    | comp_op() numeric_ex()
+    [comp_op()] numeric_ex()
+    (comp_op() numeric_ex())*
 }
 
 void numeric_ex() :
 {}
 {
-    "+++ num"
+    [numeric_op()] arith_ex()
+    (numeric_op() arith_ex())*
+}
+
+void arith_ex() :
+{}
+{
+    [arith_op()] prod_ex()
+    (arith_op() prod_ex())*
+}
+
+void prod_ex() :
+{}
+{
+    [prod_op()] pow_ex()
+    (prod_op() pow_ex())*
+}
+
+void pow_ex() :
+{}
+{
+    tight_ex() [pow_op() [sign()] tight_ex()]
+    | pow_op() tight_ex()
+}
+
+void tight_ex() :
+{}
+{
+    [tight_op()] primary_ex()
+    (tight_op() primary_ex())*
+}
+
+void primary_ex() :
+{}
+{
+    atomic_ex() (ex_suffix())*
+}
+
+void atomic_ex() :
+{}
+{
+    "atom +++"
+}
+
+void ex_suffix() :
+{}
+{
+    "suffix +++"
 }
 
 void terminator() :

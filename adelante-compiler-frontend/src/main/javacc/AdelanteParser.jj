@@ -362,7 +362,45 @@ void reason() :
 void operator_name() :
 {}
 {
-    "+++"
+    assignment_op()
+    | simple_operator_name()
+}
+
+void assignment_op() :
+{}
+{
+    LOOKAHEAD(2) [simple_operator_name()] <EQ>
+    | <ASSIGN>
+}
+
+void simple_operator_name() :
+{}
+{
+    abstract_bin_op()
+    | disjunct_op()
+    | conjunct_op()
+}
+
+void abstract_bin_op() :
+{}
+{
+    <LARR>
+    | <RARR>
+    | <LRARR>
+}
+
+void disjunct_op() :
+{}
+{
+    <KW_OR> [<KW_ELSE>]
+    | <KW_XOR>
+    | <KW_IMPLIES>
+}
+
+void conjunct_op() :
+{}
+{
+    <KW_AND> [<KW_THEN>]
 }
 
 void sign() :

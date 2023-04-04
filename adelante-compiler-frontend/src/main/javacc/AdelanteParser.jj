@@ -383,13 +383,15 @@ void simple_operator_name() :
     | numeric_op()
     | arith_op()
     | prod_op()
+    | pow_op()
+    | tight_op()
 }
 
 void abstract_bin_op() :
 {}
 {
-    <LARR>
-    | <RARR>
+    <LARR> | <BOXED_RARR>
+    | <RARR> | <BOXED_LARR>
     | <LRARR>
 }
 
@@ -449,7 +451,30 @@ void prod_op() :
     | <CIRCLED_TIMES> | <CIRCLED_DOT>
     | <BOXED_AST> | <BOXED_SLASH>
     | <BOXED_TIMES> | <BOXED_DOT>
-    | <BOXED_COLON>
+    | <BOXED_COLON> | <SLASH_SLASH>
+}
+
+void pow_op() :
+{}
+{
+    <CARET> | <AST_AST> | <BOXED_CARET>
+}
+
+void tight_op() :
+{}
+{
+    <KW_NOT>
+    | <LL> | <GG>
+    | <LLL> | <GGG>
+    | <EXCLAM> | <EE>
+    | <QUEST> | <QQ>
+    | <QEX> | <EXQ>
+    | <BAR> | <BAR_BAR>
+    | <AMP> | <AMP_AMP>
+    | <CARET_CARET>
+    | <BOXED_QUEST>
+    | <BOXED_QUOTE>
+    | <PLUS_MINUS> | <MINUS_PLUS>
 }
 
 void sign() :

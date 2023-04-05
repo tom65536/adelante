@@ -282,7 +282,87 @@ void primary_ex() :
 void atomic_ex() :
 {}
 {
-    "atom +++"
+    LOOKAHEAD(2) identifier_ref()
+    | "(" expression() ")"
+    | denoter()
+    | concretizer()
+    | abstractor()
+    | conditional_choice()
+    | pattern_matching()
+    | with_statement()
+    | display()
+}
+
+void denoter() :
+{}
+{
+    integer_denotation()
+    | real_denotation()
+    | text_denotation()
+    | bool_denotation()
+}
+
+void concretizer() :
+{}
+{
+    <KW_CONCR> atomic_ex()
+}
+
+void abstractor() :
+{}
+{
+    identifier_ref() ":" atomic_ex()
+}
+
+void conditional_choice() :
+{}
+{
+    <KW_IF> expression() <KW_THEN>
+    [paragraph()]
+    (<KW_ELIF> expression() <KW_THEN> [paragraph()])*
+    [<KW_ELSE> [paragraph()]]
+    (<KW_END> <KW_IF> | <KW_ENDIF>)
+}
+
+void pattern_matching() :
+{}
+{
+    <KW_SELECT> expression() <KW_OF>
+       (case_branch())*
+       [<KW_OTHERWISE> paragraph()]
+    (<KW_END> <KW_SELECT> | <KW_ENDSELECT>)
+}
+
+void case_branch() :
+{}
+{
+    <KW_CASE> patterns() <KW_THEN>
+    [paragraph()]
+}
+
+void patterns() :
+{}
+{
+    pattern() ("," pattern())*
+}
+
+void pattern() :
+{}
+{
+    "pattern+++"
+}
+
+void with_statement() :
+{}
+{
+    "with+++"
+}
+
+void display() :
+{}
+{
+    "[" [expression()
+    ("," expression())*] "]"
 }
 
 void ex_suffix() :
@@ -500,6 +580,7 @@ void simple_operator_name() :
     | prod_op()
     | pow_op()
     | tight_op()
+    | "[" "]"
 }
 
 void abstract_bin_op() :
@@ -737,18 +818,24 @@ TOKEN :{
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
     | <KW_BOOL : "BOOL" ("EAN")?>
+    | <KW_CASE : "CASE">
     | <KW_CHECK : "CHECK">
     | <KW_CONST : "CONST">
+    | <KW_CONCR : "CONCR" ("ETE")?>
     | <KW_CONTINUE : "CONTINUE">
     | <KW_DIV : "DIV">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
+    | <KW_ELIF : "ELIF" | "ELSIF" | "ELSEIF">
     | <KW_ELSE : "ELSE">
     | <KW_END : "END">
     | <KW_ENDEXAMPLE : "ENDEXAMPLE">
+    | <KW_ENDIF : "ENDIF">
     | <KW_ENDPACKET : "ENDPACKET">
+    | <KW_ENDSELECT : "ENDSELECT">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_FALSE : "FALSE">
+    | <KW_IF : "IF">
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
     | <KW_INT : "INT" ("EGER")?>
@@ -756,12 +843,15 @@ TOKEN :{
     | <KW_MOD : "MOD">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
+    | <KW_OF : "OF">
     | <KW_ONLY : "ONLY">
     | <KW_OR : "OR">
+    | <KW_OTHERWISE : "OTHERWISE">
     | <KW_OUTER : "OUTER">
     | <KW_PACKET : "PACKET">
     | <KW_REAL : "REAL">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
+    | <KW_SELECT : "SELECT">
     | <KW_STRUCT : "STRUCT">
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">

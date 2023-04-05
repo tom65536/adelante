@@ -148,6 +148,28 @@ void bottom_up_part() :
     "bup +++"
 }
 
+void parameter_head() :
+{}
+{
+   type_declarer()
+   (<KW_VAR> | <KW_CONST> | proc_param())
+   | proc_param()
+}
+
+void proc_param() :
+{}
+{
+    [<KW_PURE>] <KW_PROC>
+    [virtual_parameters_pack()]
+}
+
+void virtual_parameters_pack() :
+{}
+{
+    "(" parameter_head() 
+    ("," parameter_head())* ")"
+} 
+
 void root() :
 {}
 {
@@ -344,12 +366,53 @@ void patterns() :
 {}
 {
     pattern() ("," pattern())*
+    | ex_suffix() ("," ex_suffix())*
 }
 
 void pattern() :
 {}
 {
-    "pattern+++"
+    LOOKAHEAD(2) atomic_pattern() [operator_name() atomic_pattern()]
+    | operator_name() atomic_pattern()
+    | pattern_binder()
+}
+
+void atomic_pattern() :
+{}
+{
+    identifier_ref()
+    | integer_denotation()
+    | real_denotation()
+    | text_denotation()
+    | bool_denotation()
+    | pattern_display()
+    | "(" pattern() ")"
+}
+
+void pattern_binder() :
+{}
+{
+    parameter_head() identifier()
+    ["::" pattern()]
+}
+
+void pattern_display() :
+{}
+{
+    "[" [pattern() ("," pattern())*] "]"
+}
+
+void actual_parameter_list() :
+{}
+{
+    "(" [actual_parameter()
+    ("," actual_parameter())* ] ")"
+}
+
+void actual_parameter() :
+{}
+{
+    "+++"
 }
 
 void with_statement() :
@@ -368,7 +431,27 @@ void display() :
 void ex_suffix() :
 {}
 {
-    "suffix +++"
+    selector()
+    | invocation()
+    | subscript()
+}
+
+void selector() :
+{}
+{
+    "." identifier_ref()
+}
+void invocation() :
+{}
+{
+    actual_parameter_list()
+    [identifier_ref()]
+}
+
+void subscript() :
+{}
+{
+    display()
 }
 
 void terminator() :
@@ -849,6 +932,8 @@ TOKEN :{
     | <KW_OTHERWISE : "OTHERWISE">
     | <KW_OUTER : "OUTER">
     | <KW_PACKET : "PACKET">
+    | <KW_PROC : "PROC" ("EDURE")?>
+    | <KW_PURE : "PURE">
     | <KW_REAL : "REAL">
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
     | <KW_SELECT : "SELECT">

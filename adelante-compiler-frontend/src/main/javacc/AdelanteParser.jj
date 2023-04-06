@@ -414,7 +414,20 @@ void actual_parameter_list() :
 void actual_parameter() :
 {}
 {
-    "+++"
+    LOOKAHEAD([type_declarer()] [<KW_PURE>] (<KW_PROC> | <KW_OP>))
+    actual_proc_parameter()
+    | expression()
+}
+
+void actual_proc_parameter() :
+{}
+{
+    [type_declarer()]
+    [<KW_PURE>]
+    (
+        <KW_PROC> [virtual_parameters_pack()] identifier_ref()
+        <KW_OP> [virtual_parameters_pack()] operator_name()
+    )
 }
 
 void with_statement() :
@@ -936,6 +949,7 @@ TOKEN :{
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_OF : "OF">
     | <KW_ONLY : "ONLY">
+    | <KW_OP : "OP" ("ERATOR")?>
     | <KW_OR : "OR">
     | <KW_OTHERWISE : "OTHERWISE">
     | <KW_OUTER : "OUTER">

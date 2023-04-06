@@ -4,7 +4,7 @@
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/tom65536/adelante)
 ![maturity](https://img.shields.io/badge/maturity-%F0%9F%9A%A7%20WIP-red)
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/tom6tt36/adelante)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/tom65536/adelante)
 
 This project is **Work in Progress** at an early stage. Do not use!
 

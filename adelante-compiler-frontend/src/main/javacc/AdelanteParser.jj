@@ -420,7 +420,9 @@ void actual_parameter() :
 void with_statement() :
 {}
 {
-    <KW_WITH> "+++"
+    <KW_WITH> expression() [<KW_AS> patterns()]
+    <KW_DO> paragraph()
+    (<KW_ENDWITH> | <KW_END> <KW_WITH>)
 }
 
 void display() :
@@ -911,6 +913,7 @@ TOKEN :{
     | <KW_CONCR : "CONCR" ("ETE")?>
     | <KW_CONTINUE : "CONTINUE">
     | <KW_DIV : "DIV">
+    | <KW_DO : "DO">
     | <KW_DOC : "DOC" | "DOCUMENTATION">
     | <KW_ELIF : "ELIF" | "ELSIF" | "ELSEIF">
     | <KW_ELSE : "ELSE">
@@ -919,6 +922,7 @@ TOKEN :{
     | <KW_ENDIF : "ENDIF">
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENDSELECT : "ENDSELECT">
+    | <KW_ENDWITH : "ENDWITH">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_FALSE : "FALSE">

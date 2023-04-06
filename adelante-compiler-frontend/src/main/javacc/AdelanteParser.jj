@@ -528,7 +528,7 @@ void type_declarer() :
 void index_type() :
 {}
 {
-    type_declarer()
+    <KW_OF> type_declarer()
     | bounds()
 }
 
@@ -607,7 +607,7 @@ void void_type() :
 void bounds() :
 {}
 {
-    "0 .. 10 +++"
+    arith_ex() [<RANGE> arith_ex()]
 }
 
 void dimension() :

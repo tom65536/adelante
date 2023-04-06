@@ -16,14 +16,16 @@ PARSER_END(AdelanteParser)
 void program() :
 {}
 {
-    [nl()] [packets_or_packet_body()] <EOF>
+    nl() [packets_or_packet_body()]
+    | packets_or_packet_body()
 }
 
 void packets_or_packet_body() :
 {}
 {
-      packet() [nl() [packets_or_packet_body()]] 
-    | [uses_clause()] packet_body() [nl()]
+    packet()
+    [packets_or_packet_body()]
+    | [uses_clause()] packet_body()
 }
 
 void packet_file() :
@@ -31,8 +33,6 @@ void packet_file() :
 {
     [nl()]
     packet()
-    [nl()]
-    <EOF>
 }
 
 void packet() :
@@ -46,7 +46,7 @@ void packet() :
 void packet_head() :
 {}
 {
-    [obsoletion()]
+    [obsoletion() [nl()]]
     <KW_PACKET> identifier() nl()
     (uses_clause())*
     (packet_requires())*
@@ -69,7 +69,7 @@ void packet_ensures() :
 void packet_tail() :
 {}
 {
-    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()]
+    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()] nl()
 }
 
 void packet_body() :
@@ -181,19 +181,20 @@ void top_down_part() :
 {}
 {
     refinement()
-    [(<NL>)+ [top_down_part()]]
+    [top_down_part()]
 }
 
 void refinement() :
 {}
 {
-    identifier() ":" (<NL>)*
+    identifier() ":" nl()
     [LOOKAHEAD(2) paragraph()]
 }
 void paragraph() :
 {}
 {
-    unit() [nl() [paragraph()]]
+    unit() nl()
+    [LOOKAHEAD(2) paragraph()]
 }
 
 void unit() :
@@ -208,7 +209,7 @@ void assertion() :
 {}
 {
     <KW_CHECK> expression()
-    [nl() [reason()]]
+    [reason()]
 }
 
 void protocol_instances() :
@@ -226,10 +227,17 @@ void expression_statement() :
 void expression() :
 {}
 {
-    abstract_bin_ex() [assignment_op() expression()]
+    assignment_ex()
     | terminator()
     | continuator()
     | repetition()
+}
+
+void assignment_ex() :
+{}
+{
+    abstract_bin_ex()
+    [LOOKAHEAD(3) assignment_op() expression()]
 }
 
 void abstract_bin_ex() :
@@ -304,7 +312,7 @@ void primary_ex() :
 void atomic_ex() :
 {}
 {
-    LOOKAHEAD(2) identifier_ref()
+    LOOKAHEAD(3) identifier_ref()
     | "(" expression() ")"
     | denoter()
     | concretizer()
@@ -372,20 +380,13 @@ void patterns() :
 void pattern() :
 {}
 {
-    LOOKAHEAD(2) atomic_pattern() [operator_name() atomic_pattern()]
-    | operator_name() atomic_pattern()
-    | pattern_binder()
-}
-
-void atomic_pattern() :
-{}
-{
-    identifier_ref()
+    LOOKAHEAD(3) identifier_ref()
     | integer_denotation()
     | real_denotation()
     | text_denotation()
     | bool_denotation()
     | pattern_display()
+    | pattern_binder()
     | "(" pattern() ")"
 }
 
@@ -622,19 +623,19 @@ void dim_atom() :
 void obsoletion() :
 {}
 {
-    <KW_OBSOLETE> (<NL>)* [reason()]
+    <KW_OBSOLETE> [reason()]
 }
 
 void documentation() :
 {}
 {
-    <KW_DOC> <DOCUMENTATION> (<NL>)*
+    <KW_DOC> [<DOCUMENTATION>] nl()
 }
 
 void reason() :
 {}
 {
-    <KW_BECAUSE> <DOCUMENTATION> (<NL>)*
+    <KW_BECAUSE> <DOCUMENTATION>
 }
 
 void operator_name() :
@@ -778,6 +779,7 @@ void nl() :
 {}
 {
     (<NL>)+
+    | <EOF>
 }
 
 void decimal_literal() :
@@ -1852,7 +1854,7 @@ TOKEN : {
         (
               ~["\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]
             | <ESCAPED_NL>
-        )*>
+        )+>
     | <#TEXT_CONTENTS :
         (
               ~["\"", "`",

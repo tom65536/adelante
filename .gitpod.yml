@@ -5,7 +5,11 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - init: mvn install -DskipTests=false
+  - name: Maven Install
+    init: mvn install -DskipTests=false
+  - name: Run Maven Site
+    init: mvn site
+    command: pthon -m http.server 8000 -d target/site
 
 github:
   prebuilds:

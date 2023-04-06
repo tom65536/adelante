@@ -201,7 +201,8 @@ void unit() :
 {}
 {
       assertion()
-    | LOOKAHEAD(2) object_decl()
+    | LOOKAHEAD(type_declarer() (<KW_VAR> | <KW_CONST>))
+      object_decl()
     | expression_statement()
 }
 
@@ -244,83 +245,83 @@ void abstract_bin_ex() :
 {}
 {
     [abstract_bin_op()] disjunct_ex()
-    (abstract_bin_op() disjunct_ex())*
+    (LOOKAHEAD(2) abstract_bin_op() disjunct_ex())*
 }
 
 void disjunct_ex() :
 {}
 {
     [disjunct_op()] conjunct_ex()
-    (disjunct_op() conjunct_ex())*
+    (LOOKAHEAD(3) disjunct_op() conjunct_ex())*
 }
 
 void conjunct_ex() :
 {}
 {
     [conjunct_op()] comp_ex()
-    (conjunct_op() comp_ex())*
+    (LOOKAHEAD(3) conjunct_op() comp_ex())*
 }
 
 void comp_ex() :
 {}
 {
-    [comp_op()] numeric_ex()
-    (comp_op() numeric_ex())*
+    numeric_ex()
+    (LOOKAHEAD(3) comp_op() numeric_ex())*
 }
 
 void numeric_ex() :
 {}
 {
     [numeric_op()] arith_ex()
-    (numeric_op() arith_ex())*
+    (LOOKAHEAD(2) numeric_op() arith_ex())*
 }
 
 void arith_ex() :
 {}
 {
     [arith_op()] prod_ex()
-    (arith_op() prod_ex())*
+    (LOOKAHEAD(2) arith_op() prod_ex())*
 }
 
 void prod_ex() :
 {}
 {
     [prod_op()] pow_ex()
-    (prod_op() pow_ex())*
+    (LOOKAHEAD(2) prod_op() pow_ex())*
 }
 
 void pow_ex() :
 {}
 {
-    tight_ex() [pow_op() [sign()] tight_ex()]
-    | pow_op() tight_ex()
+    tight_ex() [LOOKAHEAD(2) pow_op() [sign()] tight_ex()]
+    | LOOKAHEAD(2) pow_op() tight_ex()
 }
 
 void tight_ex() :
 {}
 {
     [tight_op()] primary_ex()
-    (tight_op() primary_ex())*
+    (LOOKAHEAD(2) tight_op() primary_ex())*
 }
 
 void primary_ex() :
 {}
 {
-    atomic_ex() (ex_suffix())*
+    atomic_ex() (LOOKAHEAD(3) ex_suffix())*
 }
 
 void atomic_ex() :
 {}
 {
-    LOOKAHEAD(3) identifier_ref()
-    | "(" expression() ")"
+    "(" expression() ")"
     | denoter()
     | concretizer()
-    | abstractor()
     | conditional_choice()
     | pattern_matching()
     | with_statement()
     | display()
+    | LOOKAHEAD(3) abstractor()
+    | identifier_ref()
 }
 
 void denoter() :
@@ -374,7 +375,7 @@ void patterns() :
 {}
 {
     pattern() ("," pattern())*
-    | ex_suffix() ("," ex_suffix())*
+    | selector() ("," selector())*
 }
 
 void pattern() :
@@ -419,14 +420,14 @@ void actual_parameter() :
 void with_statement() :
 {}
 {
-    "with+++"
+    <KW_WITH> "+++"
 }
 
 void display() :
 {}
 {
-    "[" [expression()
-    ("," expression())*] "]"
+    "[" expression()
+    ("," expression())* "]"
 }
 
 void ex_suffix() :
@@ -610,7 +611,8 @@ void dim_expression() :
 void dim_factor() :
 {}
 {
-    dim_atom() [[sign()] decimal_literal() [<SLASH> decimal_literal()]]
+    dim_atom()
+    [[sign()] decimal_literal() [LOOKAHEAD(2) <SLASH> decimal_literal()]]
 }
 
 void dim_atom() :
@@ -641,8 +643,8 @@ void reason() :
 void operator_name() :
 {}
 {
-    LOOKAHEAD(2) assignment_op()
-    | simple_operator_name()
+    LOOKAHEAD(3) assignment_op()
+    | LOOKAHEAD(2) simple_operator_name()
     | comp_op()
 }
 

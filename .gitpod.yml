@@ -6,11 +6,9 @@
 
 tasks:
   - name: Maven Install
-    init: mvn install -DskipTests=false
-  - name: Run Maven Site
-    init: mvn site
-    command: pthon -m http.server 8000 -d target/site
+    init: mvn clean install -DskipTests=false site
 
 github:
   prebuilds:
     master: true
+    branches: true

@@ -1,4 +1,4 @@
-name: Publish Site
+name: Generate and Publish Site
 
 on:
   push:
@@ -17,7 +17,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'maven'
+          server-id: github
+      - name: Configure Git user
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
       - name: Build Site with Maven
         run: mvn --batch-mode -Preporting site site:stage
-      - name: Publish Site  
+      - name: Publish Site with Maven
         run: mvn --batch-mode scm-publish:publish-scm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

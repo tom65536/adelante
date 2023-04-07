@@ -1,4 +1,4 @@
-name: Java CI
+name: Publish Site
 
 on:
   push:
@@ -17,5 +17,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven
-        run: mvn --batch-mode site
+      - name: Build Site with Maven
+        run: mvn --batch-mode -Preporting site site:stage
+      - name: Publish Site  
+        run: mvn --batch-mode scm-publish:publish-scm

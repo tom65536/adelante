@@ -173,6 +173,15 @@
       </plugins>
           
     </pluginManagement>
+    <plugins>
+    <plugin>
+    <artifactId>maven-site-plugin</artifactId>
+    </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
       
   </build>
   <reporting>

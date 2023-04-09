@@ -28,5 +28,6 @@ jobs:
       - name: Publish Site with Maven
         run: mvn --batch-mode scm-publish:publish-scm
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           GH_PAGES_USER: ${{ secrets.GH_PAGES_USER }}
+           GH_PAGES_PASS: ${{ secrets.GH_PAGES_PASS }}
 

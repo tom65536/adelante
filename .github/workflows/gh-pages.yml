@@ -2,9 +2,9 @@ name: Generate and Publish Site
 
 on:
   push:
-    branches: [main]
+    branches: [main-deact]
   pull_request:
-    branches: [main]
+    branches: [main-deact]
 
 jobs:
   build:

@@ -24,9 +24,9 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
       - name: maven-settings-xml-action
-          uses: whelk-io/maven-settings-xml-action@v20
-          with:
-             servers: '[{ "id": "github", "password": "${env.GH_PAGES_PASS}" }]'
+        uses: whelk-io/maven-settings-xml-action@v20
+        with:
+          servers: '[{ "id": "github", "password": "${env.GH_PAGES_PASS}" }]'
       - name: Build Site with Maven
         run: mvn --batch-mode -Preporting site site:stage
       - name: Publish Site with Maven

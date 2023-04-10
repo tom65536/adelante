@@ -2,7 +2,7 @@ name: Generate and Publish Site
 
 on:
   push:
-    branches: [main-deact]
+    branches: [5-fix-maven-build-to-deplo-maven-site]
   pull_request:
     branches: [main-deact]
 

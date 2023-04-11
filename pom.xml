@@ -13,7 +13,7 @@
     
   <name>adelante-parent</name>
     
-  <url>https://github.com/tom65536/adelante</url>
+  <url>https://tom65536.github.io/adelante</url>
     
   <properties>
         
@@ -23,14 +23,17 @@
         
     <maven.compiler.target>11</maven.compiler.target>
 
-  <github.global.server>github</github.global.server>
-
 </properties>
 
  <distributionManagement>
+         <repository>
+            <id>maven-repo</id>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
   <site>
-    <id>github</id>
-    <url>scm:git:git@github.com:tom65536/adelante.git</url>
+    <id>local</id>
+    <url>file://${project.build.directory}/mvn-repo</url>
+    <!--url>scm:git:git@github.com:tom65536/adelante.git</url-->
   </site>
 </distributionManagement>
       <scm>
@@ -119,7 +122,11 @@
                     
           <version>2.8.2</version>
                   
-        </plugin>
+
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+                </configuration>
+            </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>javacc-maven-plugin</artifactId>
@@ -158,7 +165,19 @@
       <artifactId>site-maven-plugin</artifactId>
       <version>0.12</version>
       <configuration>
-        <message>Creating site for ${project.version}</message>
+        <message>Updating to ${project.artifactId}-${project.version}</message>
+        <noJekyll>true</noJekyll>
+        <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+                    
+       <!-- Use merge or override the content -->
+       <merge>true</merge>
+       <includes>
+        <include>**/*</include>
+       </includes>
+                    
+       <!-- repository identification -->
+       <server>github</server>
+       <oauth2Token>${env.GITHUB_OAUTH_TOKEN}</oauth2Token>
       </configuration>
       <executions>
         <execution>

@@ -13,7 +13,7 @@
     
   <name>adelante-parent</name>
     
-  <url>https://github.com/tom65536/adelante</url>
+  <url>https://tom65536.github.io/adelante</url>
     
   <properties>
         
@@ -22,15 +22,18 @@
     <maven.compiler.source>11</maven.compiler.source>
         
     <maven.compiler.target>11</maven.compiler.target>
-
-  <github.global.server>github</github.global.server>
+    <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
 
 </properties>
 
  <distributionManagement>
+         <repository>
+            <id>maven-repo</id>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
   <site>
     <id>github</id>
-    <url>scm:git:git@github.com:tom65536/adelante.git</url>
+    <url>https://tom65536.github.io/adelante/</url>
   </site>
 </distributionManagement>
       <scm>
@@ -119,7 +122,11 @@
                     
           <version>2.8.2</version>
                   
-        </plugin>
+
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+                </configuration>
+            </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>javacc-maven-plugin</artifactId>
@@ -153,13 +160,25 @@
      </plugin>             
 
 
-    <plugin>
+     <plugin>
       <groupId>com.github.github</groupId>
       <artifactId>site-maven-plugin</artifactId>
       <version>0.12</version>
       <configuration>
-        <message>Creating site for ${project.version}</message>
+        <message>Updating to ${project.artifactId}-${project.version}</message>
       </configuration>
+     </plugin>
+              
+    </plugins>
+          
+    </pluginManagement>
+    <plugins>
+    <plugin>
+    <artifactId>maven-site-plugin</artifactId>
+    </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
       <executions>
         <execution>
           <goals>
@@ -168,19 +187,50 @@
           <phase>site</phase>
         </execution>
       </executions>
-    </plugin>
-              
-      </plugins>
-          
-    </pluginManagement>
+
+      </plugin>
+    </plugins>
       
   </build>
   <reporting>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>javacc-maven-plugin</artifactId>
-        <version>3.0.1</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
+        <reportSets>
+          <reportSet>
+            <id>aggregate</id>
+            <inherited>false</inherited>
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.5.0</version>
+         <reportSets>
+          <reportSet>
+            <id>default</id>
+            <configuration>
+            </configuration>
+            <reports>
+              <report>javadoc</report>
+              <report>test-javadoc</report>
+            </reports>
+          </reportSet>
+          <reportSet>
+            <id>aggregate</id>
+            <configuration>
+            </configuration>
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
     </plugins>
   </reporting>

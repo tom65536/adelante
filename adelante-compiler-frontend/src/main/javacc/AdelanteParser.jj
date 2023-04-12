@@ -487,7 +487,79 @@ void continuator() :
 void repetition() :
 {}
 {
-    "+++ rep"
+    [repetition_head()]
+    repetition_body()
+}
+
+void repetition_head() :
+{}
+{
+    across_clause() [while_clause()]
+    | while_clause()
+}
+
+void across_clause() :
+{}
+{
+    <KW_ACROSS> expression()
+    [<KW_AS> pattern()]
+}
+
+void while_clause() :
+{}
+{
+    <KW_WHILE> expression()
+}
+
+void repetition_body() :
+{}
+{
+    repeat_clause()
+    | some_clause()
+    | all_clause()
+    | no_clause()
+}
+
+void repeat_clause() :
+{}
+{
+    <KW_REPEAT>
+    (loop_invariant())*
+    [paragraph()]
+    (loop_variant())*
+    [<KW_UNTIL> expression()]
+    [<KW_ELSE> paragraph()]
+    (<KW_END> <KW_REPEAT> | <KW_ENDREPEAT>)
+}
+
+void some_clause() :
+{}
+{
+    <KW_SOME> expression()
+}
+
+void all_clause() :
+{}
+{
+    <KW_ALL> expression()
+}
+
+void no_clause() :
+{}
+{
+    <KW_NO> expression()
+}
+
+void loop_invariant() :
+{}
+{
+    "+++ invariant"
+}
+
+void loop_variant() :
+{}
+{
+    "+++ variant"
 }
 
 void unit_ref() :
@@ -916,6 +988,8 @@ TOKEN :{
     | <BAR_BAR : "||">
     | <AMP_AMP : "&&">
     | <CARET_CARET : "^^">
+    | <KW_ACROSS : "ACROSS">
+    | <KW_ALL : "ALL">
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
@@ -934,6 +1008,7 @@ TOKEN :{
     | <KW_ENDEXAMPLE : "ENDEXAMPLE">
     | <KW_ENDIF : "ENDIF">
     | <KW_ENDPACKET : "ENDPACKET">
+    | <KW_ENDREPEAT : "ENDREP" ("EAT")?>
     | <KW_ENDSELECT : "ENDSELECT">
     | <KW_ENDWITH : "ENDWITH">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
@@ -945,6 +1020,7 @@ TOKEN :{
     | <KW_INT : "INT" ("EGER")?>
     | <KW_LEAVE : "LEAVE">
     | <KW_MOD : "MOD">
+    | <KW_NO : "NO">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_OF : "OF">
@@ -957,15 +1033,19 @@ TOKEN :{
     | <KW_PROC : "PROC" ("EDURE")?>
     | <KW_PURE : "PURE">
     | <KW_REAL : "REAL">
+    | <KW_REPEAT : "REP" ("EAT")?>
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
     | <KW_SELECT : "SELECT">
+    | <KW_SOME : "SOME">
     | <KW_STRUCT : "STRUCT">
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
     | <KW_TRUE : "TRUE">
+    | <KW_UNTIL : "UNTIL">
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">
     | <KW_VOID : "VOID">
+    | <KW_WHILE : "WHILE">
     | <KW_WITH : "WITH">
     | <KW_WITHOUT : "WITHOUT">
     | <KW_XOR : "XOR">

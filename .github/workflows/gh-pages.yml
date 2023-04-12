@@ -20,7 +20,9 @@ jobs:
           cache: 'maven'
           server-id: github
       - name: Build and Push Site with Maven
-        run: mvn --batch-mode site
+        run: |
+           echo "$GITHUB_AUTH_TOKEN" | wc
+           mvn --batch-mode site
         env:
            GITHUB_OAUTH_TOKEN: ${{ secrets.GH_PAGES_PASS }}
 

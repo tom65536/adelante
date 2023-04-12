@@ -19,18 +19,8 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
           server-id: github
-      - name: Configure Git user
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-      - name: maven-settings-xml-action
-        uses: whelk-io/maven-settings-xml-action@v20
-        with:
-          servers: '[{ "id": "github", "password": "${env.GH_PAGES_PASS}" }]'
-      - name: Build Site with Maven
-        run: mvn --batch-mode -Preporting site site:stage
-      - name: Publish Site with Maven
-        run: mvn --batch-mode scm-publish:publish-scm
+      - name: Build and Push Site with Maven
+        run: mvn --batch-mode site
         env:
-           GH_PAGES_PASS: ${{ secrets.GH_PAGES_PASS }}
+           GITHUB_OAUTH_TOKEN: ${{ secrets.GH_PAGES_PASS }}
 

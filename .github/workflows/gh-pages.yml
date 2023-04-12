@@ -17,7 +17,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
           server-id: github
       - name: Build and Push Site with Maven
         run: |

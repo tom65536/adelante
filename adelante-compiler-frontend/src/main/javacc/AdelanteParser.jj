@@ -487,15 +487,11 @@ void continuator() :
 void repetition() :
 {}
 {
-    [repetition_head()]
+    across_clause()
+    [while_clause()]
     repetition_body()
-}
-
-void repetition_head() :
-{}
-{
-    across_clause() [while_clause()]
-    | while_clause()
+    | [while_clause()]
+      repeat_clause()
 }
 
 void across_clause() :
@@ -515,7 +511,13 @@ void repetition_body() :
 {}
 {
     repeat_clause()
-    | some_clause()
+    | quantifier_clause()
+}
+
+void quantifier_clause() :
+{}
+{
+    some_clause()
     | all_clause()
     | no_clause()
 }
@@ -541,6 +543,7 @@ void some_clause() :
 void all_clause() :
 {}
 {
+    [<KW_NOT>]
     <KW_ALL> expression()
 }
 
@@ -1931,7 +1934,7 @@ TOKEN :{
     // -- end section --
     | <#START_BLOCK : (<START> | (<UPPER>)+ <CONTINUE>) (<UPPER> | <CONTINUE>)*>
     | <#CONTINUE_BLOCK : (<UPPER>)* <CONTINUE> (<UPPER> | <CONTINUE>)*>
-    | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)*>
+    | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)* | <UPPER> >
 }
 
 SKIP : {

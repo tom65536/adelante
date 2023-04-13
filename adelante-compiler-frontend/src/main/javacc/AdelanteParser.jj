@@ -497,14 +497,14 @@ void repetition() :
 void across_clause() :
 {}
 {
-    <KW_ACROSS> expression()
+    <KW_ACROSS> abstract_bin_ex()
     [<KW_AS> pattern()]
 }
 
 void while_clause() :
 {}
 {
-    <KW_WHILE> expression()
+    <KW_WHILE> abstract_bin_ex()
 }
 
 void repetition_body() :
@@ -568,13 +568,17 @@ void loop_variant() :
 void unit_ref() :
 {}
 {
-    "+++"
+    loop_ref()
+    | <KW_PROC>
+    | <KW_OP>
+    | identifier_ref()
 }
 
 void loop_ref() :
 {}
 {
-    [<DECIMAL_LITERAL>] <KW_OUTER>
+    [[<DECIMAL_LITERAL>] <KW_OUTER>]
+    <KW_REPEAT>
 }
 
 void object_decl() :

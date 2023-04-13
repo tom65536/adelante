@@ -6,7 +6,7 @@
 
 tasks:
   - name: Maven Install
-    init: mvn clean install -DskipTests=false site
+    init: mvn clean install -DskipTests=false site:site
 
 github:
   prebuilds:

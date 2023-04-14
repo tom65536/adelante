@@ -167,7 +167,22 @@ void exportable_decl() :
 void local_decl() :
 {}
 {
-    "loc+++"
+    unit_test()
+}
+
+void unit_test() :
+{}
+{
+    <KW_TEST> identifier() nl()
+    [procedure_body()]
+    (<KW_END> <KW_TEST>| <KW_ENDTEST>)
+    [identifier_ref()]
+}
+
+void procedure_body() :
+{}
+{
+    "+++"
 }
 
 void parameter_head() :
@@ -1063,6 +1078,7 @@ TOKEN :{
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENDREPEAT : "ENDREP" ("EAT")?>
     | <KW_ENDSELECT : "ENDSELECT">
+    | <KW_ENDTEST : "ENDTEST">
     | <KW_ENDWITH : "ENDWITH">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
@@ -1093,6 +1109,7 @@ TOKEN :{
     | <KW_SELECT : "SELECT">
     | <KW_SOME : "SOME">
     | <KW_STRUCT : "STRUCT">
+    | <KW_TEST : "TEST">
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
     | <KW_TRUE : "TRUE">

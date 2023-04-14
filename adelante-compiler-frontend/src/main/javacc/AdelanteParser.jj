@@ -161,7 +161,55 @@ void bottom_up_decl() :
 void exportable_decl() :
 {}
 {
-   "xpd+++"
+   abstract_type_decl()
+   | procedure_decl()
+   | operator_decl()
+   | measure_decl()
+   | synonym_decl()
+   | protocol_decl()
+   | automatic_delegation()
+}
+
+void abstract_type_decl() :
+{}
+{
+    "+++abst"
+}
+
+void procedure_decl() :
+{}
+{
+    "+++proc"
+}
+
+void operator_decl() :
+{}
+{
+    "+++op"
+}
+
+void synonym_decl() :
+{}
+{
+    "+++syn"
+}
+
+void protocol_decl() :
+{}
+{
+    "+++proto"
+}
+
+void automatic_delegation() :
+{}
+{
+    "+++auto"
+}
+
+void measure_decl() :
+{}
+{
+    "+++"
 }
 
 void local_decl() :
@@ -182,7 +230,8 @@ void unit_test() :
 void procedure_body() :
 {}
 {
-    "+++"
+    paragraph()
+    [top_down_part()]
 }
 
 void parameter_head() :

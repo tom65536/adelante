@@ -173,7 +173,42 @@ void exportable_decl() :
 void abstract_type_decl() :
 {}
 {
-    "+++abst"
+    <KW_TYPE> identifier()
+    [formal_type_part()]
+    <EQ> abstract_type()
+}
+
+void formal_type_part() :
+{}
+{
+    "(" formal_type_param()
+    ("," formal_type_param())*
+    [type_bounds()]
+    ")"
+}
+
+void formal_type_param() :
+{}
+{
+    identifier()
+}
+
+void type_bounds() :
+{}
+{
+    <KW_HAVING> type_bound_ex()
+}
+
+void type_bound_ex() :
+{}
+{
+    "+++tbx"
+}
+
+void abstract_type() :
+{}
+{
+    type_declarer()
 }
 
 void procedure_decl() :
@@ -1132,6 +1167,7 @@ TOKEN :{
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_FALSE : "FALSE">
+    | <KW_HAVING : "HAVING">
     | <KW_IF : "IF">
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
@@ -1162,6 +1198,7 @@ TOKEN :{
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
     | <KW_TRUE : "TRUE">
+    | <KW_TYPE: "TYPE">
     | <KW_UNTIL : "UNTIL">
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">

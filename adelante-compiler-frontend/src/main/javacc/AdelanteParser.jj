@@ -202,7 +202,30 @@ void type_bounds() :
 void type_bound_ex() :
 {}
 {
-    "+++tbx"
+    disjunct_type_bound()
+}
+
+void disjunct_type_bound() :
+{}
+{
+    conjunct_type_bound()
+    (<KW_OR> conjunct_type_bound())*
+}
+
+void conjunct_type_bound() :
+{}
+{
+    simple_type_bound()
+    (<KW_AND> simple_type_bound())*
+}
+
+void simple_type_bound() :
+{}
+{
+   "(" type_bound_ex() ")"
+   | identifier_ref()
+     ["(" type_declarer()
+     ("," type_declarer())* ")"]
 }
 
 void abstract_type() :

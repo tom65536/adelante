@@ -447,7 +447,20 @@ void protocol_tail() :
 void automatic_delegation() :
 {}
 {
-    "+++auto"
+    <KW_IMPL>
+    [formal_measure_part()]
+    [formal_type_part()]
+    identifier_ref()
+    [formal_parameter_pack()]
+    <KW_BY> impl_protocol()
+    ("," impl_protocol())*
+}
+
+void impl_protocol() :
+{}
+{
+    identifier_ref()
+    [actual_parameter_list()]
 }
 
 void measure_decl() :
@@ -1348,6 +1361,7 @@ TOKEN :{
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
+    | <KW_BY : "BY">
     | <KW_BOOL : "BOOL" ("EAN")?>
     | <KW_CASE : "CASE">
     | <KW_CHECK : "CHECK">
@@ -1375,6 +1389,7 @@ TOKEN :{
     | <KW_FALSE : "FALSE">
     | <KW_HAVING : "HAVING">
     | <KW_IF : "IF">
+    | <KW_IMPL : "IMPL" ("EMENT" ("ATION")?)?>
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
     | <KW_INVARIANT: "INV" ("ARIANT")?>

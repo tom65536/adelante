@@ -337,7 +337,12 @@ void parameter_body() :
 void procedure_contracts() :
 {}
 {
-    "procedure_contracts+++"
+    (
+        precondition()
+        | postcondition()
+        | invariant()
+        | variant()
+    )+
 }
 
 void operator_decl() :
@@ -461,6 +466,20 @@ void assertion() :
 {
     <KW_CHECK> expression()
     [reason()]
+}
+
+void precondition() :
+{}
+{
+    <KW_REQUIRES> expression()
+    [reason()] nl()
+}
+
+void postcondition() :
+{}
+{
+    <KW_ENSURES> expression()
+    [reason()] nl()
 }
 
 void invariant() :

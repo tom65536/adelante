@@ -386,7 +386,62 @@ void synonym_decl() :
 void protocol_decl() :
 {}
 {
-    "+++proto"
+    protocol_head()
+    [protocol_body()]
+    protocol_tail()
+}
+
+void protocol_head() :
+{}
+{
+    <KW_PROTOCOL> identifier()
+    [formal_measure_part()]
+    [formal_type_part()]
+}
+
+void protocol_body() :
+{}
+{
+    (protocol_assertion())+
+}
+
+void protocol_assertion() :
+{}
+{
+    type_bounds()
+    | signature()
+}
+
+void signature() :
+{}
+{
+    [<KW_PURE>]
+    [type_declarer()]
+    (
+        <KW_PROC> virtual_procedure_naming()
+        <KW_OP> operator_name() virtual_parameters_pack()
+    )
+}
+
+void virtual_procedure_naming() :
+{}
+{
+    identifier()
+    [virtual_procedure_naming_cont()]
+}
+
+void virtual_procedure_naming_cont() :
+{}
+{
+    virtual_parameters_pack()
+    [identifier() [virtual_procedure_naming_cont()]]
+}
+
+void protocol_tail() :
+{}
+{
+    (<KW_END> <KW_PROTOCOL> | <KW_ENDPROTOCOL>)
+    [identifier_ref()]
 }
 
 void automatic_delegation() :
@@ -1310,6 +1365,7 @@ TOKEN :{
     | <KW_ENDOP : "ENDOP" ("ERATOR")?>
     | <KW_ENDPACKET : "ENDPACKET">
     | <KW_ENDPROC : "ENDPROC" ("EDURE")?>
+    | <KW_ENDPROTOCOL : "ENDPROTOCOL">
     | <KW_ENDREPEAT : "ENDREP" ("EAT")?>
     | <KW_ENDSELECT : "ENDSELECT">
     | <KW_ENDTEST : "ENDTEST">
@@ -1338,6 +1394,7 @@ TOKEN :{
     | <KW_OUTER : "OUTER">
     | <KW_PACKET : "PACKET">
     | <KW_PROC : "PROC" ("EDURE")?>
+    | <KW_PROTOCOL : "PROTOCOL">
     | <KW_PUBLIC : "PUB" ("LIC")?>
     | <KW_PURE : "PURE">
     | <KW_REAL : "REAL">

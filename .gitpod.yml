@@ -12,3 +12,4 @@ vscode:
   extensions:
     - vscjava.vscode-maven
     - vscjava.vscode-java-pack
+    - DotJoshJohnson.xml

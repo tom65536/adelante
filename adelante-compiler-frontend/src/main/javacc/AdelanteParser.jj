@@ -23,6 +23,7 @@ void program() :
 void packets_or_packet_body() :
 {}
 {
+    LOOKAHEAD([obsoletion() [nl()]] <KW_PACKET>)
     packet()
     [packets_or_packet_body()]
     | [uses_clause()] packet_body()
@@ -75,6 +76,7 @@ void packet_tail() :
 void packet_body() :
 {}
 {
+    LOOKAHEAD(bottom_up_decl())
       bottom_up_part() [root() [top_down_part()]]
     | root() [top_down_part()]
 }
@@ -145,30 +147,351 @@ void import_item() :
 void bottom_up_part() :
 {}
 {
-    "bup +++"
+    (LOOKAHEAD(bottom_up_decl())
+       bottom_up_decl() nl())+
+}
+
+void bottom_up_decl() :
+{}
+{
+    [<KW_PUBLIC> [nl()]]
+    [obsoletion()]
+    exportable_decl()
+    | local_decl()
+}
+
+void exportable_decl() :
+{}
+{
+   abstract_type_decl()
+   | LOOKAHEAD(
+       [<KW_PURE>]
+       [type_declarer()]
+       <KW_PROC>
+     ) procedure_decl()
+   | LOOKAHEAD(
+       [<KW_PURE>]
+       [type_declarer()]
+       <KW_OP>
+     ) operator_decl()
+   | measure_decl()
+   | synonym_decl()
+   | protocol_decl()
+   | automatic_delegation()
+}
+
+void abstract_type_decl() :
+{}
+{
+    <KW_TYPE> identifier()
+    [formal_type_part()]
+    <EQ> abstract_type()
+}
+
+void formal_type_part() :
+{}
+{
+    "(" formal_type_param()
+    ("," formal_type_param())*
+    [type_bounds()]
+    ")"
+}
+
+void formal_type_param() :
+{}
+{
+    identifier()
+}
+
+void type_bounds() :
+{}
+{
+    <KW_HAVING> type_bound_ex()
+}
+
+void type_bound_ex() :
+{}
+{
+    disjunct_type_bound()
+}
+
+void disjunct_type_bound() :
+{}
+{
+    conjunct_type_bound()
+    (<KW_OR> conjunct_type_bound())*
+}
+
+void conjunct_type_bound() :
+{}
+{
+    simple_type_bound()
+    (<KW_AND> simple_type_bound())*
+}
+
+void simple_type_bound() :
+{}
+{
+   "(" type_bound_ex() ")"
+   | identifier_ref()
+     ["(" type_declarer()
+     ("," type_declarer())* ")"]
+}
+
+void abstract_type() :
+{}
+{
+    type_declarer()
+}
+
+void procedure_decl() :
+{}
+{
+    procedure_head()
+    [procedure_body()]
+    procedure_tail()
+}
+
+void procedure_head() :
+{}
+{
+    [<KW_PURE>]
+    [type_declarer()]
+    <KW_PROC>
+    [formal_measure_part()]
+    [formal_type_part()]
+    procedure_naming()
+    nl()
+    [procedure_contracts()]
+}
+
+void procedure_tail() :
+{}
+{
+    (<KW_END> <KW_PROC> | <KW_ENDPROC>)
+    [identifier_ref()]
+}
+
+void formal_measure_part() :
+{}
+{
+    "{" identifier()
+        ("," identifier())*
+    "}"
+}
+
+void procedure_naming() :
+{}
+{
+    identifier()
+    [procedure_naming_cont()]
+}
+
+void procedure_naming_cont() :
+{}
+{
+    formal_parameter_pack()
+    [identifier() [procedure_naming_cont()]]
+}
+
+void formal_parameter_pack() :
+{}
+{
+   "(" parameter_head() parameter_body()
+   (LOOKAHEAD(3) "," parameter_body())*
+   ("," parameter_head()
+      parameter_body()
+      (LOOKAHEAD(3) "," parameter_body())*
+   )*
+   [<ELLIPSIS>] ")"
 }
 
 void parameter_head() :
 {}
 {
-   type_declarer()
-   (<KW_VAR> | <KW_CONST> | proc_param())
-   | proc_param()
+    type_declarer() 
+    (<KW_VAR> | <KW_CONST> | proc_param())
+    | proc_param()
+    | <KW_PURE> type_declarer() proc_param()
 }
 
 void proc_param() :
 {}
 {
-    [<KW_PURE>] <KW_PROC>
-    [virtual_parameters_pack()]
+    <KW_PROC> [virtual_parameters_pack()]
 }
 
 void virtual_parameters_pack() :
 {}
 {
-    "(" parameter_head() 
+    "(" parameter_head()
     ("," parameter_head())* ")"
-} 
+}
+
+void parameter_body() :
+{}
+{
+    identifier()
+}
+
+void procedure_contracts() :
+{}
+{
+    (
+        precondition()
+        | postcondition()
+        | invariant()
+        | variant()
+    )+
+}
+
+void operator_decl() :
+{}
+{
+    operator_head()
+    [procedure_body()]
+    operator_tail()
+}
+
+void operator_head() :
+{}
+{
+    [<KW_PURE>]
+    [type_declarer()]
+    <KW_OP>
+    [formal_measure_part()]
+    [formal_type_part()]
+    operator_name()
+    formal_parameter_pack()
+    nl()
+    [procedure_contracts()]
+}
+
+void operator_tail() :
+{}
+{
+    (<KW_END> <KW_OP> | <KW_ENDOP>)
+    [operator_name()]
+}
+
+void synonym_decl() :
+{}
+{
+    <KW_LET> (
+        identifier() <EQ> expression()
+        | <KW_TYPE> identifier() <EQ> type_declarer()
+    )
+}
+
+void protocol_decl() :
+{}
+{
+    protocol_head()
+    [protocol_body()]
+    protocol_tail()
+}
+
+void protocol_head() :
+{}
+{
+    <KW_PROTOCOL> identifier()
+    [formal_measure_part()]
+    [formal_type_part()]
+}
+
+void protocol_body() :
+{}
+{
+    (protocol_assertion())+
+}
+
+void protocol_assertion() :
+{}
+{
+    type_bounds()
+    | signature()
+}
+
+void signature() :
+{}
+{
+    [<KW_PURE>]
+    [type_declarer()]
+    (
+        <KW_PROC> virtual_procedure_naming()
+        <KW_OP> operator_name() virtual_parameters_pack()
+    )
+}
+
+void virtual_procedure_naming() :
+{}
+{
+    identifier()
+    [virtual_procedure_naming_cont()]
+}
+
+void virtual_procedure_naming_cont() :
+{}
+{
+    virtual_parameters_pack()
+    [identifier() [virtual_procedure_naming_cont()]]
+}
+
+void protocol_tail() :
+{}
+{
+    (<KW_END> <KW_PROTOCOL> | <KW_ENDPROTOCOL>)
+    [identifier_ref()]
+}
+
+void automatic_delegation() :
+{}
+{
+    <KW_IMPL>
+    [formal_measure_part()]
+    [formal_type_part()]
+    identifier_ref()
+    [formal_parameter_pack()]
+    <KW_BY> impl_protocol()
+    ("," impl_protocol())*
+}
+
+void impl_protocol() :
+{}
+{
+    identifier_ref()
+    [actual_parameter_list()]
+}
+
+void measure_decl() :
+{}
+{
+    <KW_MEASURE>
+    identifier()
+    [<EQ> dim_expression()]
+}
+
+void local_decl() :
+{}
+{
+    unit_test()
+}
+
+void unit_test() :
+{}
+{
+    <KW_TEST> identifier() nl()
+    [procedure_body()]
+    (<KW_END> <KW_TEST>| <KW_ENDTEST>)
+    [identifier_ref()]
+}
+
+void procedure_body() :
+{}
+{
+    paragraph()
+    [top_down_part()]
+}
 
 void root() :
 {}
@@ -213,10 +536,46 @@ void assertion() :
     [reason()]
 }
 
+void precondition() :
+{}
+{
+    <KW_REQUIRES> expression()
+    [reason()] nl()
+}
+
+void postcondition() :
+{}
+{
+    <KW_ENSURES> expression()
+    [reason()] nl()
+}
+
+void invariant() :
+{}
+{
+    <KW_INVARIANT> expression()
+    [reason()] nl()
+}
+
+void variant() :
+{}
+{
+    <KW_VARIANT> expression()
+    [reason()] nl()
+}
+
 void protocol_instances() :
 {}
 {
-    "protocol_instances +++"
+    protocol_instance()
+    ("," protocol_instance())*
+}
+
+void protocol_instance() :
+{}
+{
+    identifier_ref()
+    virtual_parameters_pack()
 }
 
 void expression_statement() :
@@ -487,19 +846,98 @@ void continuator() :
 void repetition() :
 {}
 {
-    "+++ rep"
+    across_clause()
+    [while_clause()]
+    repetition_body()
+    | [while_clause()]
+      repeat_clause()
+}
+
+void across_clause() :
+{}
+{
+    <KW_ACROSS> abstract_bin_ex()
+    [<KW_AS> pattern()]
+}
+
+void while_clause() :
+{}
+{
+    <KW_WHILE> abstract_bin_ex()
+}
+
+void repetition_body() :
+{}
+{
+    repeat_clause()
+    | quantifier_clause()
+}
+
+void quantifier_clause() :
+{}
+{
+    some_clause()
+    | all_clause()
+    | no_clause()
+}
+
+void repeat_clause() :
+{}
+{
+    <KW_REPEAT>
+    (loop_invariant())*
+    [paragraph()]
+    (loop_variant())*
+    [<KW_UNTIL> expression()]
+    [<KW_ELSE> paragraph()]
+    (<KW_END> <KW_REPEAT> | <KW_ENDREPEAT>)
+}
+
+void some_clause() :
+{}
+{
+    <KW_SOME> expression()
+}
+
+void all_clause() :
+{}
+{
+    [<KW_NOT>]
+    <KW_ALL> expression()
+}
+
+void no_clause() :
+{}
+{
+    <KW_NO> expression()
+}
+
+void loop_invariant() :
+{}
+{
+    invariant()
+}
+
+void loop_variant() :
+{}
+{
+    variant()
 }
 
 void unit_ref() :
 {}
 {
-    "+++"
+    loop_ref()
+    | <KW_PROC>
+    | <KW_OP>
+    | identifier_ref()
 }
 
 void loop_ref() :
 {}
 {
-    [<DECIMAL_LITERAL>] <KW_OUTER>
+    [[<DECIMAL_LITERAL>] <KW_OUTER>]
+    <KW_REPEAT>
 }
 
 void object_decl() :
@@ -544,14 +982,16 @@ void struct_type() :
 {}
 {
     <KW_STRUCT> "("
-        fields() ("," fields())*
+        fields()
+        ("," (LOOKAHEAD(2) fields() | identifier()))*
     ")"
 }
 
 void fields() :
 {}
 {
-    "fields +++"
+    parameter_head() 
+    identifier()
 }
 
 void primitive_type() :
@@ -916,9 +1356,12 @@ TOKEN :{
     | <BAR_BAR : "||">
     | <AMP_AMP : "&&">
     | <CARET_CARET : "^^">
+    | <KW_ACROSS : "ACROSS">
+    | <KW_ALL : "ALL">
     | <KW_AND : "AND">
     | <KW_AS : "AS">
     | <KW_BECAUSE : "BECAUSE">
+    | <KW_BY : "BY">
     | <KW_BOOL : "BOOL" ("EAN")?>
     | <KW_CASE : "CASE">
     | <KW_CHECK : "CHECK">
@@ -933,18 +1376,29 @@ TOKEN :{
     | <KW_END : "END">
     | <KW_ENDEXAMPLE : "ENDEXAMPLE">
     | <KW_ENDIF : "ENDIF">
+    | <KW_ENDOP : "ENDOP" ("ERATOR")?>
     | <KW_ENDPACKET : "ENDPACKET">
+    | <KW_ENDPROC : "ENDPROC" ("EDURE")?>
+    | <KW_ENDPROTOCOL : "ENDPROTOCOL">
+    | <KW_ENDREPEAT : "ENDREP" ("EAT")?>
     | <KW_ENDSELECT : "ENDSELECT">
+    | <KW_ENDTEST : "ENDTEST">
     | <KW_ENDWITH : "ENDWITH">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_FALSE : "FALSE">
+    | <KW_HAVING : "HAVING">
     | <KW_IF : "IF">
+    | <KW_IMPL : "IMPL" ("EMENT" ("ATION")?)?>
     | <KW_IMPLIES : "IMPLIES">
     | <KW_IN : "IN">
+    | <KW_INVARIANT: "INV" ("ARIANT")?>
     | <KW_INT : "INT" ("EGER")?>
     | <KW_LEAVE : "LEAVE">
+    | <KW_LET : "LET">
+    | <KW_MEASURE : "MEASURE">
     | <KW_MOD : "MOD">
+    | <KW_NO : "NO">
     | <KW_NOT : "NOT">
     | <KW_OBSOLETE : "OBSOLETE">
     | <KW_OF : "OF">
@@ -955,17 +1409,26 @@ TOKEN :{
     | <KW_OUTER : "OUTER">
     | <KW_PACKET : "PACKET">
     | <KW_PROC : "PROC" ("EDURE")?>
+    | <KW_PROTOCOL : "PROTOCOL">
+    | <KW_PUBLIC : "PUB" ("LIC")?>
     | <KW_PURE : "PURE">
     | <KW_REAL : "REAL">
+    | <KW_REPEAT : "REP" ("EAT")?>
     | <KW_REQUIRES : "REQUIRE" | "REQUIRES">
     | <KW_SELECT : "SELECT">
+    | <KW_SOME : "SOME">
     | <KW_STRUCT : "STRUCT">
+    | <KW_TEST : "TEST">
     | <KW_TEXT : "TEXT">
     | <KW_THEN : "THEN">
     | <KW_TRUE : "TRUE">
+    | <KW_TYPE: "TYPE">
+    | <KW_UNTIL : "UNTIL">
     | <KW_USES : "USES" | "USE">
     | <KW_VAR : "VAR">
+    | <KW_VARIANT : "VARIANT">
     | <KW_VOID : "VOID">
+    | <KW_WHILE : "WHILE">
     | <KW_WITH : "WITH">
     | <KW_WITHOUT : "WITHOUT">
     | <KW_XOR : "XOR">
@@ -1851,7 +2314,7 @@ TOKEN :{
     // -- end section --
     | <#START_BLOCK : (<START> | (<UPPER>)+ <CONTINUE>) (<UPPER> | <CONTINUE>)*>
     | <#CONTINUE_BLOCK : (<UPPER>)* <CONTINUE> (<UPPER> | <CONTINUE>)*>
-    | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)*>
+    | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)* | <UPPER> >
 }
 
 SKIP : {

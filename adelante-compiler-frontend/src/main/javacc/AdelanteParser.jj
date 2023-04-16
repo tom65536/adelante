@@ -297,7 +297,41 @@ void procedure_naming_cont() :
 void formal_parameter_pack() :
 {}
 {
-    "+++fpp"
+   "(" parameter_head() parameter_body()
+   (LOOKAHEAD(3) "," parameter_body())*
+   ("," parameter_head()
+      parameter_body()
+      (LOOKAHEAD(3) "," parameter_body())*
+   )*
+   [<ELLIPSIS>] ")"
+}
+
+void parameter_head() :
+{}
+{
+    type_declarer() 
+    (<KW_VAR> | <KW_CONST> | proc_param())
+    | proc_param()
+    | <KW_PURE> type_declarer() proc_param()
+}
+
+void proc_param() :
+{}
+{
+    <KW_PROC> [virtual_parameters_pack()]
+}
+
+void virtual_parameters_pack() :
+{}
+{
+    "(" parameter_head()
+    ("," parameter_head())* ")"
+}
+
+void parameter_body() :
+{}
+{
+    identifier()
 }
 
 void procedure_contracts() :
@@ -385,28 +419,6 @@ void procedure_body() :
     paragraph()
     [top_down_part()]
 }
-
-void parameter_head() :
-{}
-{
-   type_declarer()
-   (<KW_VAR> | <KW_CONST> | proc_param())
-   | proc_param()
-}
-
-void proc_param() :
-{}
-{
-    [<KW_PURE>] <KW_PROC>
-    [virtual_parameters_pack()]
-}
-
-void virtual_parameters_pack() :
-{}
-{
-    "(" parameter_head() 
-    ("," parameter_head())* ")"
-} 
 
 void root() :
 {}

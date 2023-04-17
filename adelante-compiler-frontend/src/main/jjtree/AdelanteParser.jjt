@@ -118,20 +118,42 @@ void uses_clause() #void :
     <KW_USES> packet_usage() ("," packet_usage())* nl()
 }
 
-// Subdirectory names are prefixed with a medial character.
-
 void packet_usage() :
 {}
 {
-    identifier()
-    [packet_location()]
+    packet_ref()
     [use_transforms()]
 }
 
-void packet_location() :
+// A packet reference may be one of the following:
+// - Simple Reference: searches the standard library
+//     first, then relative to the current packet file,
+//     e.g. math/random
+// - Relative Reference: starts with a dot or a double dot,
+//     searches relative to the packet file only,
+//     e.g. ./math or ../utility funtions/text
+// - Bundle Reference: bundle name goes before the colon,
+//     e.g. tom65536/adelante extras:crypto/aes256
+// You can hide files from being treated as packets by 
+void packet_ref() :
 {}
 {
-    <KW_IN> <TEXT_LITERAL>
+    abs_packet_ref() [":" abs_packet_ref()]
+    rel_packet_ref()
+}
+
+void abs_packet_ref() #PacketRefPart :
+{}
+{
+    identifier() (<SLASH> identifier)*
+}
+
+void rel_packet_ref() #PacketRefPart :
+{}
+{
+    "." (<SLASH> identifier())+
+    | ((<RANGE> <SLASH>) #DirUp())+ identifier()
+      (<SLASH> identifier())*
 }
 
 void use_transforms() :

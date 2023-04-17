@@ -13,6 +13,10 @@ public final class AdelanteParser {
 }
 PARSER_END(AdelanteParser)
 
+// A program is the main compilation unit.
+// It may comprise zero or more packets which
+// contents are visible by the program
+// automatically.
 void program() :
 {}
 {
@@ -20,7 +24,7 @@ void program() :
     | packets_or_packet_body()
 }
 
-void packets_or_packet_body() :
+void packets_or_packet_body() #void :
 {}
 {
     LOOKAHEAD([obsoletion() [nl()]] <KW_PACKET>)
@@ -29,13 +33,24 @@ void packets_or_packet_body() :
     | [uses_clause()] packet_body()
 }
 
-void packet_file() :
+// Packets which are not defined in the program file
+// are searched in the search path.
+//
+// Each packet must reside in a single file of the same name
+// (plus a suffix .pkt or .packet).
+//
+// A packet file must contain a single packet with the same name
+// as the file name.
+void packet_file() #void :
 {}
 {
     [nl()]
     packet()
 }
 
+// Packets are containers for code intended to be
+// reused. Contents of a packet remain private unless
+// they are marked PUBLIC.
 void packet() :
 {}
 {
@@ -44,15 +59,28 @@ void packet() :
     packet_tail()
 }
 
-void packet_head() :
+void packet_head() #void :
 {}
 {
-    [obsoletion() [nl()]]
-    <KW_PACKET> identifier() nl()
+    packet_id() nl()
     (uses_clause())*
     (packet_requires())*
     (packet_ensures())*
     (documentation())*
+}
+
+// Each packet is given a name by which it
+// may be referred in the USES clause of
+// another packet or program.
+//
+// Packets may be marked obsolete, in which
+// case their use issues a warning or an error
+// depending on the settings.
+void packet_id() :
+{}
+{
+    [obsoletion() [nl()]]
+    <KW_PACKET> identifier()
 }
 
 void packet_requires() :
@@ -73,7 +101,7 @@ void packet_tail() :
     (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()] nl()
 }
 
-void packet_body() :
+void packet_body() #void :
 {}
 {
     LOOKAHEAD(bottom_up_decl())
@@ -81,18 +109,29 @@ void packet_body() :
     | root() [top_down_part()]
 }
 
-void uses_clause() :
+// A USES clause makes the public contents
+// of a packet visible to the referring namespace
+// without any prefix.
+void uses_clause() #void :
 {}
 {
     <KW_USES> packet_usage() ("," packet_usage())* nl()
 }
 
+// Subdirectory names are prefixed with a medial character.
+
 void packet_usage() :
 {}
 {
     identifier()
-    [<KW_IN> <TEXT_LITERAL>]
+    [packet_location()]
     [use_transforms()]
+}
+
+void packet_location() :
+{}
+{
+    <KW_IN> <TEXT_LITERAL>
 }
 
 void use_transforms() :

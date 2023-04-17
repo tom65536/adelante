@@ -966,6 +966,7 @@ void quantifier_clause() #void :
     some_clause()
     | all_clause()
     | no_clause()
+    | not_all_clause()
 }
 
 void repeat_clause() :
@@ -1001,8 +1002,13 @@ void some_clause() :
 void all_clause() :
 {}
 {
-    [<KW_NOT>]
     <KW_ALL> expression()
+}
+
+void not_all_clause() :
+{}
+{
+    <KW_NOT> <KW_ALL> expression()
 }
 
 void no_clause() :
@@ -1027,8 +1033,8 @@ void unit_ref() :
 {}
 {
     loop_ref()
-    | <KW_PROC>
-    | <KW_OP>
+    | (<KW_PROC>) #ProcRef()
+    | (<KW_OP>) #OpRef()
     | identifier_ref()
 }
 
@@ -1043,13 +1049,13 @@ void object_decl() :
 {}
 {
     type_declarer() (
-        <KW_VAR> identifier() [initializer()]
-        | <KW_CONST> identifier() initializer()
+        (<KW_VAR>) #VarModifier() identifier() [initializer()]
+        | (<KW_CONST>) #ConstModifier() identifier() initializer()
     )
-    | (<KW_VAR> | <KW_CONST>) identifier() initializer()
+    | access_modifier() identifier() initializer()
 }
 
-void initializer() :
+void initializer() #void :
 {}
 {
     "::" expression()
@@ -1069,7 +1075,7 @@ void index_type() :
     | bounds()
 }
 
-void cell_type_declarer() :
+void cell_type_declarer() #void :
 {}
 {
     primitive_type()
@@ -1209,7 +1215,7 @@ void assignment_op() :
     | <ASSIGN>
 }
 
-void simple_operator_name() :
+void simple_operator_name() #void :
 {}
 {
     abstract_bin_op()
@@ -1331,7 +1337,7 @@ void identifier_ref() :
     <IDENTIFIER> [<ELLIPSIS>]
 }
 
-void nl() :
+void nl() #void :
 {}
 {
     (<NL>)+

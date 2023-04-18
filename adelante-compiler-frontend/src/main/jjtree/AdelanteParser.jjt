@@ -1081,12 +1081,22 @@ void cell_type_declarer() #void :
     primitive_type()
     | named_type()
     | struct_type()
+    | enum_type()
 }
 
 void struct_type() :
 {}
 {
     <KW_STRUCT> "("
+        fields()
+        ("," (LOOKAHEAD(2) fields() | identifier()))*
+    ")"
+}
+
+void enum_type() :
+{}
+{
+    <KW_ENUM> "("
         fields()
         ("," (LOOKAHEAD(2) fields() | identifier()))*
     ")"
@@ -1229,7 +1239,7 @@ void simple_operator_name() #void :
     | "[" "]"
 }
 
-void abstract_bin_op() :
+void abstract_bin_op() #Operator :
 {}
 {
     <LARR> | <BOXED_RARR>
@@ -1237,7 +1247,7 @@ void abstract_bin_op() :
     | <LRARR>
 }
 
-void disjunct_op() :
+void disjunct_op() #Operator :
 {}
 {
     <KW_OR> [<KW_ELSE>]
@@ -1245,13 +1255,13 @@ void disjunct_op() :
     | <KW_IMPLIES>
 }
 
-void conjunct_op() :
+void conjunct_op() #Operator :
 {}
 {
     <KW_AND> [<KW_THEN>]
 }
 
-void comp_op() :
+void comp_op() #Operator :
 {}
 {
     <LT> | <GT> | <LE> | <GE>
@@ -1266,14 +1276,14 @@ void comp_op() :
     | <CIRCLED_EQ> | <CIRCLED_NE>
 }
 
-void numeric_op() :
+void numeric_op() #Operator :
 {}
 {
     <STARSHIP> | <BAT>
     | <TILDE>
 }
 
-void arith_op() :
+void arith_op() #Operator :
 {}
 {
     <PLUS> | <MINUS>
@@ -1282,7 +1292,7 @@ void arith_op() :
     | <BOXED_PLUS> | <BOXED_MINUS>
 }
 
-void prod_op() :
+void prod_op() #Operator :
 {}
 {
     <AST> | <SLASH>
@@ -1296,13 +1306,13 @@ void prod_op() :
     | <BOXED_COLON> | <SLASH_SLASH>
 }
 
-void pow_op() :
+void pow_op() #Operator :
 {}
 {
     <CARET> | <AST_AST> | <BOXED_CARET>
 }
 
-void tight_op() :
+void tight_op() #Operator() :
 {}
 {
     <KW_NOT>
@@ -1334,7 +1344,8 @@ void identifier() :
 void identifier_ref() :
 {}
 {
-    <IDENTIFIER> [<ELLIPSIS>]
+    <IDENTIFIER>
+    [(<ELLIPSIS>) #Ellipsis()]
 }
 
 void nl() #void :
@@ -1366,7 +1377,8 @@ void real_denotation() :
 void bool_denotation() :
 {}
 {
-    <KW_TRUE> | <KW_FALSE>
+    (<KW_TRUE>) #TrueDenotation()
+    | (<KW_FALSE>) #FalseDenotation()
 }
 
 void text_denotation() :
@@ -1490,6 +1502,7 @@ TOKEN :{
     | <KW_ENDTEST : "ENDTEST">
     | <KW_ENDWITH : "ENDWITH">
     | <KW_ENSURES : "ENSURE" | "ENSURES">
+    | <KW_ENUM : "ENUM">
     | <KW_EXAMPLE : "EXAMPLE">
     | <KW_FALSE : "FALSE">
     | <KW_HAVING : "HAVING">
@@ -2422,7 +2435,7 @@ TOKEN :{
     | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)* | <UPPER> >
 }
 
-SKIP : {
+SPECIAL_TOKEN : {
       <WS : ([
             "\t", " ", "\u00A0",
             "\u0168",
@@ -2431,10 +2444,7 @@ SKIP : {
         ])+>
     | <#HASH : "#" | "\uFE5F" | "\uFF03">
     | <COMMENT : <HASH> (~["\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"])*>
-}
-
-SPECIAL_TOKEN : {
-    <ESCAPED_NL : <NL> (<WS>)? "'">
+    | <ESCAPED_NL : <NL> (<WS>)? "'">
 }
 
 TOKEN : {

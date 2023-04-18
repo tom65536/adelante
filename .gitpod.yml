@@ -13,3 +13,7 @@ vscode:
     - vscjava.vscode-maven
     - vscjava.vscode-java-pack
     - DotJoshJohnson.xml
+    - redhat.java
+    - vscjava.vscode-java-debug
+    - vscjava.vscode-java-dependency
+    - vscjava.vscode-java-test

@@ -127,7 +127,7 @@ void uses_clause() #void :
     <KW_USES> packet_usage() ("," packet_usage())* nl()
 }
 
-void packet_usage() :
+void packet_usage() #PacketUsage :
 {}
 {
     packet_ref()
@@ -182,33 +182,33 @@ void use_rename_list() #void :
     use_rename() ("," use_rename())*
 }
 
-void use_rename() :
+void use_rename() #UseRename :
 {}
 {
     import_item() <KW_AS> import_item()
 }
 
-void without_clause() :
+void without_clause() #WithoutClause :
 {}
 {
     <KW_WITHOUT> import_item() ("," import_item())*
 }
 
-void only_clause() :
+void only_clause() #OnlyClause :
 {}
 {
     <KW_ONLY> opt_rename()
     ("," opt_rename())*
 }
 
-void opt_rename() #use_rename(>1) :
+void opt_rename() #UseRename(>1) :
 {}
 {
     import_item()
     [<KW_AS> import_item()]
 }
 
-void import_item() :
+void import_item() #ImportItem :
 {}
 {
       identifier_ref()
@@ -222,10 +222,10 @@ void bottom_up_part() #void :
        bottom_up_decl() nl())+
 }
 
-void bottom_up_decl() :
+void bottom_up_decl() #void :
 {}
 {
-    [(<KW_PUBLIC>) #public_modifier() [nl()]]
+    [(<KW_PUBLIC>) #PublicModifier() [nl()]]
     [obsoletion()]
     exportable_decl()
     | local_decl()
@@ -251,7 +251,7 @@ void exportable_decl() #void :
    | automatic_delegation()
 }
 
-void abstract_type_decl() :
+void abstract_type_decl() #AbstractTypeDecl :
 {}
 {
     <KW_TYPE> identifier()
@@ -259,7 +259,7 @@ void abstract_type_decl() :
     <EQ> abstract_type()
 }
 
-void formal_type_part() :
+void formal_type_part() #FormalTypePart :
 {}
 {
     "(" formal_type_param()
@@ -268,13 +268,13 @@ void formal_type_part() :
     ")"
 }
 
-void formal_type_param() :
+void formal_type_param() #FormalTypeParam :
 {}
 {
     identifier()
 }
 
-void type_bounds() :
+void type_bounds() #TypeBounds :
 {}
 {
     <KW_HAVING> type_bound_ex()
@@ -286,21 +286,21 @@ void type_bound_ex() #void :
     disjunct_type_bound()
 }
 
-void disjunct_type_bound() #disjunct_type_bound(>1) :
+void disjunct_type_bound() #DisjunctTypeBound(>1) :
 {}
 {
     conjunct_type_bound()
     (<KW_OR> conjunct_type_bound())*
 }
 
-void conjunct_type_bound() #conjunct_type_bound(>1) :
+void conjunct_type_bound() #ConjunctTypeBound(>1) :
 {}
 {
     simple_type_bound()
     (<KW_AND> simple_type_bound())*
 }
 
-void simple_type_bound() #simple_type_bound(>1) :
+void simple_type_bound() #SimpleTypeBound(>1) :
 {}
 {
    "(" type_bound_ex() ")"
@@ -309,13 +309,13 @@ void simple_type_bound() #simple_type_bound(>1) :
      ("," type_declarer())* ")"]
 }
 
-void abstract_type() :
+void abstract_type() #AbstractType :
 {}
 {
     type_declarer()
 }
 
-void procedure_decl() :
+void procedure_decl() #ProcedureDecl :
 {}
 {
     procedure_head()
@@ -323,13 +323,13 @@ void procedure_decl() :
     procedure_tail()
 }
 
-void pure_modifier() :
+void pure_modifier() #PureModifier :
 {}
 {
     <KW_PURE>
 }
 
-void procedure_head() :
+void procedure_head() #ProcedureHead :
 {}
 {
     [pure_modifier()]
@@ -342,14 +342,14 @@ void procedure_head() :
     [procedure_contracts()]
 }
 
-void procedure_tail() :
+void procedure_tail() #BlockTail :
 {}
 {
     (<KW_END> <KW_PROC> | <KW_ENDPROC>)
     [identifier_ref()]
 }
 
-void formal_measure_part() :
+void formal_measure_part() #FormalMeasurePart :
 {}
 {
     "{" identifier()
@@ -357,7 +357,7 @@ void formal_measure_part() :
     "}"
 }
 
-void procedure_naming() :
+void procedure_naming() #ProcedureNaming :
 {}
 {
     identifier()
@@ -371,7 +371,7 @@ void procedure_naming_cont() #void :
     [identifier() [procedure_naming_cont()]]
 }
 
-void formal_parameter_pack() :
+void formal_parameter_pack() #FormalParameterPack :
 {}
 {
    "(" parameter_head() parameter_body()
@@ -383,7 +383,7 @@ void formal_parameter_pack() :
    [<ELLIPSIS>] ")"
 }
 
-void access_modifier() :
+void access_modifier() #void :
 {}
 {
     (<KW_VAR>) #VarModifier()

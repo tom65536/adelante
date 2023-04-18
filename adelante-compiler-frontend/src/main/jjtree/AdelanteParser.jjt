@@ -1,12 +1,21 @@
 /*
- *
+ * Parser for the Adelante Programming Language.
  */
+
+options {
+   MULTI = true;
+   NODE_DEFAULT_VOID = true;
+   TRACK_TOKENS = true;
+   STATIC = false;
+   VISITOR = true;
+   UNICODE_INPUT = true;
+}
 
 PARSER_BEGIN(AdelanteParser)
 package com.github.tom65536.adelante.parser;
 
 /**
- *
+ * Parser for the Adelante Programming Language.
  */
 public final class AdelanteParser {
 
@@ -17,7 +26,7 @@ PARSER_END(AdelanteParser)
 // It may comprise zero or more packets which
 // contents are visible by the program
 // automatically.
-void program() :
+void program() #Program :
 {}
 {
     nl() [packets_or_packet_body()]
@@ -51,7 +60,7 @@ void packet_file() #void :
 // Packets are containers for code intended to be
 // reused. Contents of a packet remain private unless
 // they are marked PUBLIC.
-void packet() :
+void packet() #Packet :
 {}
 {
     packet_head()
@@ -76,26 +85,26 @@ void packet_head() #void :
 // Packets may be marked obsolete, in which
 // case their use issues a warning or an error
 // depending on the settings.
-void packet_id() :
+void packet_id() #void :
 {}
 {
     [obsoletion() [nl()]]
     <KW_PACKET> identifier()
 }
 
-void packet_requires() :
+void packet_requires() #PacketRequires :
 {}
 {
     <KW_REQUIRES> protocol_instances() nl()
 }
 
-void packet_ensures() :
+void packet_ensures() #PacketEnsures :
 {}
 {
     <KW_ENSURES> protocol_instances() nl()
 }
 
-void packet_tail() :
+void packet_tail() #BlockTail :
 {}
 {
     (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()] nl()

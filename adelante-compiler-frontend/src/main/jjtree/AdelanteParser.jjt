@@ -9,6 +9,7 @@ options {
    STATIC = false;
    VISITOR = true;
    UNICODE_INPUT = true;
+   USER_CHAR_STREAM = true;
 }
 
 PARSER_BEGIN(AdelanteParser)

@@ -390,7 +390,7 @@ void access_modifier() #void :
     | (<KW_CONST>) #ConstModifier()
 }
 
-void parameter_head() :
+void parameter_head() #ParameterHead :
 {}
 {
     type_declarer() 
@@ -399,20 +399,20 @@ void parameter_head() :
     | pure_modifier() type_declarer() proc_param()
 }
 
-void proc_param() :
+void proc_param() #ProcParam :
 {}
 {
     <KW_PROC> [virtual_parameters_pack()]
 }
 
-void virtual_parameters_pack() :
+void virtual_parameters_pack() #VirtualParametersPack :
 {}
 {
     "(" parameter_head()
     ("," parameter_head())* ")"
 }
 
-void parameter_body() :
+void parameter_body() #ParameterBody :
 {}
 {
     identifier()
@@ -429,7 +429,7 @@ void procedure_contracts() #void :
     )+
 }
 
-void operator_decl() :
+void operator_decl() #OperatorDecl :
 {}
 {
     operator_head()
@@ -437,7 +437,7 @@ void operator_decl() :
     operator_tail()
 }
 
-void operator_head() :
+void operator_head() #OperatorHead :
 {}
 {
     [pure_modifier()]
@@ -451,7 +451,7 @@ void operator_head() :
     [procedure_contracts()]
 }
 
-void operator_tail() :
+void operator_tail() #BlockTail :
 {}
 {
     (<KW_END> <KW_OP> | <KW_ENDOP>)
@@ -466,19 +466,19 @@ void synonym_decl() #void :
     | type_synonym()
 }
 
-void expression_synonym() :
+void expression_synonym() #ExpressionSynonym :
 {}
 {
     <KW_LET> identifier() <EQ> expression()
 }
 
-void type_synonym() :
+void type_synonym() #TypeSynonym :
 {}
 {
     <KW_LET> <KW_TYPE> identifier() <EQ> type_declarer()
 }
 
-void protocol_decl() :
+void protocol_decl() #ProtocolDecl :
 {}
 {
     protocol_head()
@@ -486,7 +486,7 @@ void protocol_decl() :
     protocol_tail()
 }
 
-void protocol_head() :
+void protocol_head() #ProtocolDecl :
 {}
 {
     <KW_PROTOCOL> identifier()
@@ -494,7 +494,7 @@ void protocol_head() :
     [formal_type_part()]
 }
 
-void protocol_body() :
+void protocol_body() #void :
 {}
 {
     (protocol_assertion())+
@@ -507,7 +507,7 @@ void protocol_assertion() #void :
     | signature()
 }
 
-void signature() :
+void signature() #Signature :
 {}
 {
     [pure_modifier()]
@@ -532,14 +532,14 @@ void virtual_procedure_naming_cont() #void :
     [identifier() [virtual_procedure_naming_cont()]]
 }
 
-void protocol_tail() :
+void protocol_tail() #BlockTail :
 {}
 {
     (<KW_END> <KW_PROTOCOL> | <KW_ENDPROTOCOL>)
     [identifier_ref()]
 }
 
-void automatic_delegation() :
+void automatic_delegation() #AutomaticDelegation :
 {}
 {
     <KW_IMPL>
@@ -551,14 +551,14 @@ void automatic_delegation() :
     ("," impl_protocol())*
 }
 
-void impl_protocol() :
+void impl_protocol() #ImplProtocol :
 {}
 {
     identifier_ref()
     [actual_parameter_list()]
 }
 
-void measure_decl() :
+void measure_decl() #MeasureDecl :
 {}
 {
     <KW_MEASURE>
@@ -572,7 +572,7 @@ void local_decl() #void :
     unit_test()
 }
 
-void unit_test() :
+void unit_test() #UnitTest :
 {}
 {
     <KW_TEST> identifier() nl()
@@ -581,14 +581,14 @@ void unit_test() :
     [identifier_ref()]
 }
 
-void procedure_body() :
+void procedure_body() #Body :
 {}
 {
     paragraph()
     [top_down_part()]
 }
 
-void root() :
+void root() #Root :
 {}
 {
       LOOKAHEAD(2) refinement()
@@ -602,14 +602,14 @@ void top_down_part() #void :
     [top_down_part()]
 }
 
-void refinement() :
+void refinement() #Refinement :
 {}
 {
     identifier() ":" nl()
     [LOOKAHEAD(2) paragraph()]
 }
 
-void paragraph() :
+void paragraph() #Paragraph :
 {}
 {
     unit() nl()
@@ -625,35 +625,35 @@ void unit() #void :
     | expression_statement()
 }
 
-void assertion() :
+void assertion() #Assertion :
 {}
 {
     <KW_CHECK> expression()
     [reason()]
 }
 
-void precondition() :
+void precondition() #Precondition :
 {}
 {
     <KW_REQUIRES> expression()
     [reason()] nl()
 }
 
-void postcondition() :
+void postcondition() #Postcondition :
 {}
 {
     <KW_ENSURES> expression()
     [reason()] nl()
 }
 
-void invariant() :
+void invariant() #Invariant :
 {}
 {
     <KW_INVARIANT> expression()
     [reason()] nl()
 }
 
-void variant() :
+void variant() #Variant :
 {}
 {
     <KW_VARIANT> expression()
@@ -667,14 +667,14 @@ void protocol_instances() #void :
     ("," protocol_instance())*
 }
 
-void protocol_instance() :
+void protocol_instance() #ProtocolInstance :
 {}
 {
     identifier_ref()
     [virtual_parameters_pack()]
 }
 
-void expression_statement() :
+void expression_statement() #ExpressionStatement :
 {}
 {
     expression()
@@ -689,77 +689,79 @@ void expression() #void :
     | repetition()
 }
 
-void assignment_ex() #assignment_expression(>1) :
+void assignment_ex() #AssignmentExpression(>1) :
 {}
 {
     abstract_bin_ex()
     [LOOKAHEAD(3) assignment_op() expression()]
 }
 
-void abstract_bin_ex() #abstract_bin_expression(>1) :
+void abstract_bin_ex() #OperatorExpression(>1) :
 {}
 {
     [abstract_bin_op()] disjunct_ex()
     (LOOKAHEAD(2) abstract_bin_op() disjunct_ex())*
 }
 
-void disjunct_ex() #disjunct_expression(>1) :
+void disjunct_ex() #OperatorExpression(>1) :
 {}
 {
     [disjunct_op()] conjunct_ex()
     (LOOKAHEAD(3) disjunct_op() conjunct_ex())*
 }
 
-void conjunct_ex() #conjunct_expression(>1) :
+void conjunct_ex() #OperatorExpression(>1) :
 {}
 {
     [conjunct_op()] comp_ex()
     (LOOKAHEAD(3) conjunct_op() comp_ex())*
 }
 
-void comp_ex() #comp_expression(>1) :
+// Comparison expressions with more than two operands
+// are evaluated as (a op1 b) AND (b op2 c) AND ...
+void comp_ex() #ComparisonExpression(>1) :
 {}
 {
     numeric_ex()
     (LOOKAHEAD(3) comp_op() numeric_ex())*
 }
 
-void numeric_ex() #numeric_expression(>1) :
+void numeric_ex() #OperatorExpression(>1) :
 {}
 {
     [numeric_op()] arith_ex()
     (LOOKAHEAD(2) numeric_op() arith_ex())*
 }
 
-void arith_ex() #arith_expression(>1) :
+void arith_ex() #OperatorExpression(>1) :
 {}
 {
     [arith_op()] prod_ex()
     (LOOKAHEAD(2) arith_op() prod_ex())*
 }
 
-void prod_ex() #prod_expression(>1) :
+void prod_ex() #OperatorExpression(>1) :
 {}
 {
     [prod_op()] pow_ex()
     (LOOKAHEAD(2) prod_op() pow_ex())*
 }
 
-void pow_ex() #pow_expression(>1) :
+void pow_ex() #PowerExpression(>1) :
 {}
 {
     tight_ex() [LOOKAHEAD(2) pow_op() [sign()] tight_ex()]
     | LOOKAHEAD(2) pow_op() tight_ex()
 }
 
-void tight_ex() #tight_expression(>1) :
+void tight_ex() #OperatorExpression(>1) :
 {}
 {
     [tight_op()] primary_ex()
     (LOOKAHEAD(2) tight_op() primary_ex())*
 }
 
-void primary_ex() #primary_expression(>1) :
+void primary_ex() #OperatorExpression(>1) :
 {}
 {
     atomic_ex() (LOOKAHEAD(3) ex_suffix())*
@@ -788,52 +790,52 @@ void denoter() #void :
     | bool_denotation()
 }
 
-void concretizer() :
+void concretizer() #Concretizer :
 {}
 {
     <KW_CONCR> atomic_ex()
 }
 
-void abstractor() :
+void abstractor() #Abstractor :
 {}
 {
     identifier_ref() ":" atomic_ex()
 }
 
-void conditional_choice() :
+void conditional_choice() #ConditionalChoice :
 {}
 {
     (<KW_IF> expression() <KW_THEN>
-    [paragraph()]) #conditional_branch()
-    ((<KW_ELIF> expression() <KW_THEN> [paragraph()]) #conditional_branch())*
+    [paragraph()]) #ConditionalBranch()
+    ((<KW_ELIF> expression() <KW_THEN> [paragraph()]) #ConditionalBranch())*
     [default_branch()]
     (<KW_END> <KW_IF> | <KW_ENDIF>)
 }
 
-void pattern_matching() :
+void pattern_matching() #PatternMatching :
 {}
 {
     <KW_SELECT> expression() <KW_OF>
        (case_branch())*
-       [(<KW_OTHERWISE> paragraph()) #default_branch()]
+       [(<KW_OTHERWISE> paragraph()) #DefaultBranch()]
     (<KW_END> <KW_SELECT> | <KW_ENDSELECT>)
 }
 
-void case_branch() :
+void case_branch() #CaseBranch :
 {}
 {
     <KW_CASE> patterns() <KW_THEN>
     [paragraph()]
 }
 
-void patterns() :
+void patterns() #Patterns :
 {}
 {
     pattern() ("," pattern())*
     | selector() ("," selector())*
 }
 
-void pattern() :
+void pattern() #Pattern :
 {}
 {
     LOOKAHEAD(3) identifier_ref()
@@ -846,27 +848,27 @@ void pattern() :
     | "(" pattern() ")"
 }
 
-void pattern_binder() :
+void pattern_binder() #PatternBinder :
 {}
 {
     parameter_head() identifier()
     ["::" pattern()]
 }
 
-void pattern_display() :
+void pattern_display() #PatternDisplay :
 {}
 {
     "[" [pattern() ("," pattern())*] "]"
 }
 
-void actual_parameter_list() :
+void actual_parameter_list() #ActualParameterList :
 {}
 {
     "(" [actual_parameter()
     ("," actual_parameter())* ] ")"
 }
 
-void actual_parameter() :
+void actual_parameter() #ActualParameter :
 {}
 {
     LOOKAHEAD([type_declarer()] [<KW_PURE>] (<KW_PROC> | <KW_OP>))
@@ -874,7 +876,7 @@ void actual_parameter() :
     | expression()
 }
 
-void actual_proc_parameter() :
+void actual_proc_parameter() #ActualProcParameter :
 {}
 {
     [type_declarer()]
@@ -885,15 +887,15 @@ void actual_proc_parameter() :
     )
 }
 
-void with_statement() :
+void with_statement() #WithStatement :
 {}
 {
-    (<KW_WITH> expression() [<KW_AS> patterns()]) #with_head()
+    (<KW_WITH> expression() [<KW_AS> patterns()]) #WithHead()
     <KW_DO> paragraph()
     (<KW_ENDWITH> | <KW_END> <KW_WITH>)
 }
 
-void display() :
+void display() #Display :
 {}
 {
     "[" expression()
@@ -908,38 +910,39 @@ void ex_suffix() #void :
     | subscript()
 }
 
-void selector() :
+void selector() #Selector :
 {}
 {
     "." identifier_ref()
 }
-void invocation() :
+
+void invocation() #Invocation :
 {}
 {
     actual_parameter_list()
     [identifier_ref()]
 }
 
-void subscript() :
+void subscript() #Subscript :
 {}
 {
     display()
 }
 
-void terminator() :
+void terminator() #Terminator :
 {}
 {
     <KW_LEAVE> [unit_ref()]
     [<KW_WITH> expression()]
 }
 
-void continuator() :
+void continuator() #Continuator :
 {}
 {
     <KW_CONTINUE> [loop_ref()]
 }
 
-void repetition() :
+void repetition() #Repetition :
 {}
 {
     across_clause()
@@ -949,14 +952,14 @@ void repetition() :
       repeat_clause()
 }
 
-void across_clause() :
+void across_clause() #AcrossClause :
 {}
 {
     <KW_ACROSS> abstract_bin_ex()
     [<KW_AS> pattern()]
 }
 
-void while_clause() :
+void while_clause() #WhileClause :
 {}
 {
     <KW_WHILE> abstract_bin_ex()
@@ -978,7 +981,7 @@ void quantifier_clause() #void :
     | not_all_clause()
 }
 
-void repeat_clause() :
+void repeat_clause() #RepeatClause :
 {}
 {
     <KW_REPEAT>
@@ -990,71 +993,71 @@ void repeat_clause() :
     (<KW_END> <KW_REPEAT> | <KW_ENDREPEAT>)
 }
 
-void until_clause() :
+void until_clause() #UntilClause :
 {}
 {
     <KW_UNTIL> expression()
 }
 
-void default_branch() :
+void default_branch() #DefaultBranch :
 {}
 {
     <KW_ELSE> [paragraph()]
 }
 
-void some_clause() :
+void some_clause() #SomeClause :
 {}
 {
     <KW_SOME> expression()
 }
 
-void all_clause() :
+void all_clause() #AllClause :
 {}
 {
     <KW_ALL> expression()
 }
 
-void not_all_clause() :
+void not_all_clause() #NotAllClause :
 {}
 {
     <KW_NOT> <KW_ALL> expression()
 }
 
-void no_clause() :
+void no_clause() #NoClause :
 {}
 {
     <KW_NO> expression()
 }
 
-void loop_invariant() :
+void loop_invariant() #LoopInvariant :
 {}
 {
     invariant()
 }
 
-void loop_variant() :
+void loop_variant() #LoopVariant :
 {}
 {
     variant()
 }
 
-void unit_ref() :
+void unit_ref() #void :
 {}
 {
     loop_ref()
     | (<KW_PROC>) #ProcRef()
     | (<KW_OP>) #OpRef()
-    | identifier_ref()
+    | (identifier_ref()) #RefinementRef()
 }
 
-void loop_ref() :
+void loop_ref() #LoopRef :
 {}
 {
     [[<DECIMAL_LITERAL>] <KW_OUTER>]
     <KW_REPEAT>
 }
 
-void object_decl() :
+void object_decl() #ObjectDecl :
 {}
 {
     type_declarer() (
@@ -1070,14 +1073,14 @@ void initializer() #void :
     "::" expression()
 }
 
-void type_declarer() :
+void type_declarer() #TypeDeclarer :
 {}
 {
     cell_type_declarer()
     ("[" index_type() ("," index_type())* "]")*
 }
 
-void index_type() :
+void index_type() #IndexType :
 {}
 {
     <KW_OF> type_declarer()
@@ -1093,7 +1096,7 @@ void cell_type_declarer() #void :
     | enum_type()
 }
 
-void struct_type() :
+void struct_type() #StructType :
 {}
 {
     <KW_STRUCT> "("
@@ -1102,7 +1105,7 @@ void struct_type() :
     ")"
 }
 
-void enum_type() :
+void enum_type() #EnumType :
 {}
 {
     <KW_ENUM> "("
@@ -1111,14 +1114,14 @@ void enum_type() :
     ")"
 }
 
-void fields() :
+void fields() #void :
 {}
 {
     parameter_head() 
     identifier()
 }
 
-void primitive_type() :
+void primitive_type() #void :
 {}
 {
     int_type()
@@ -1128,7 +1131,7 @@ void primitive_type() :
     | void_type()
 }
 
-void int_type() :
+void int_type() #IntType :
 {}
 {
     <KW_INT>
@@ -1136,25 +1139,25 @@ void int_type() :
     [dimension()]
 }
 
-void real_type() :
+void real_type() #RealType :
 {}
 {
     <KW_REAL> [dimension()]
 }
 
-void text_type() :
+void text_type() #TextType :
 {}
 {
     <KW_TEXT>
 }
 
-void bool_type() :
+void bool_type() #BoolType :
 {}
 {
     <KW_BOOL>
 }
 
-void named_type() :
+void named_type() #NamedType :
 {}
 {
     identifier_ref()
@@ -1162,64 +1165,71 @@ void named_type() :
       ("," type_declarer())* ")"]
 }
 
-void void_type() :
+void void_type() #VoidType :
 {}
 {
     <KW_VOID>
 }
 
-void bounds() :
+void bounds() #Bounds :
 {}
 {
     arith_ex() [<RANGE> arith_ex()]
 }
 
-void dimension() :
+void dimension() #Dimension :
 {}
 {
     "{" dim_expression() "}"
 }
 
-void dim_expression() :
+void dim_expression() #DimOp(>1) :
 {}
 {
     dim_factor()
-    ((<AST>|<SLASH>) dim_factor())*
+    (dim_op() dim_factor())*
 }
 
-void dim_factor() :
+void dim_op() #void :
 {}
 {
-    dim_atom()
-    [[sign()] decimal_literal() [LOOKAHEAD(2) <SLASH> decimal_literal()]]
+    (<AST>) #AstOp()
+    | (<SLASH>) #SlashOp()
 }
 
-void dim_atom() :
+void dim_factor() #DimFactor(>1) :
+{}
+{
+    dim_atom() 
+    [<CARET> [sign()] decimal_literal() [LOOKAHEAD(2) <SLASH> decimal_literal()]]
+}
+
+void dim_atom() #void :
 {}
 {
     identifier_ref()
     | "(" dim_expression() ")"
 }
 
-void obsoletion() :
+void obsoletion() #Obsoletion :
 {}
 {
     <KW_OBSOLETE> [reason()]
 }
 
-void documentation() :
+void documentation() #Documentation :
 {}
 {
     <KW_DOC> [<DOCUMENTATION>] nl()
 }
 
-void reason() :
+void reason() #Reason :
 {}
 {
     <KW_BECAUSE> <DOCUMENTATION>
 }
 
-void operator_name() :
+void operator_name() #OperatorName :
 {}
 {
     LOOKAHEAD(3) assignment_op()
@@ -1227,7 +1237,7 @@ void operator_name() :
     | comp_op()
 }
 
-void assignment_op() :
+void assignment_op() #AssignmentOp:
 {}
 {
     LOOKAHEAD(2) simple_operator_name() <EQ>
@@ -1245,74 +1255,104 @@ void simple_operator_name() #void :
     | prod_op()
     | pow_op()
     | tight_op()
-    | "[" "]"
+    | ("[" "]") #BracketsOp()
 }
 
 void abstract_bin_op() #Operator :
 {}
 {
-    <LARR> | <BOXED_RARR>
-    | <RARR> | <BOXED_LARR>
-    | <LRARR>
+    (<LARR>) #LeftArrow()
+    | (<BOXED_RARR>) #BoxedRightArrow()
+    | (<RARR>) #RightArrow()
+    | (<BOXED_LARR>) #BoxedLeftArrow()
+    | (<LRARR>) #LeftRightArrow()
 }
 
 void disjunct_op() #Operator :
 {}
 {
-    <KW_OR> [<KW_ELSE>]
-    | <KW_XOR>
-    | <KW_IMPLIES>
+    LOOKAHEAD(2) <KW_OR> <KW_ELSE> #OrElseOp()
+    | (<KW_OR>) #OrOp()
+    | (<KW_XOR>) #XorOp()
+    | (<KW_IMPLIES>) #ImpliesOp()
 }
 
 void conjunct_op() #Operator :
 {}
 {
-    <KW_AND> [<KW_THEN>]
+    LOOKAHEAD(2) <KW_AND> <KW_THEN> #AndThenOp
+    | <KW_AND> #AndOp()
 }
 
 void comp_op() #Operator :
 {}
 {
-    <LT> | <GT> | <LE> | <GE>
-    | <EQ> | <NE>
-    | LOOKAHEAD(2) [<KW_NOT>] <KW_IN>
-    | <IN> | <NOT_IN>
-    | <BOXED_GT> | <BOXED_LT>
-    | <BOXED_LE> | <BOXED_GE>
-    | <BOXED_EQ> | <BOXED_NE>
-    | <CIRCLED_LT> | <CIRCLED_GT>
-    | <CIRCLED_LE> | <CIRCLED_GE>
-    | <CIRCLED_EQ> | <CIRCLED_NE>
+    <LT> #LessThanOp
+    | <GT> #GreaterThanOp
+    | <LE> #LessOrEqualOp
+    | <GE> #GreaterOrEqualOp
+    | <EQ> #EqualOp
+    | <NE> #NotEqualOp
+    | LOOKAHEAD(2) <KW_NOT> <KW_IN> #NotInOp
+    | <KW_IN> #InOp
+    | <IN> #InOp
+    | <NOT_IN> #NotInOp
+    | <BOXED_GT> #BoxedGreaterThanOp
+    | <BOXED_LT> #BoxedLessThanOp
+    | <BOXED_LE> #BoxedLessOrEqualOp
+    | <BOXED_GE> #BoxedGreaterOrEqualOp
+    | <BOXED_EQ> #BoxedEqualOp
+    | <BOXED_NE> #BoxedNotEqualOp
+    | <CIRCLED_LT> #CircledLessThanOp
+    | <CIRCLED_GT> #CircledGreaterThanOp
+    | <CIRCLED_LE> #CircledLessOrEqualOp
+    | <CIRCLED_GE> #CircledGreaterOrEqualOp
+    | <CIRCLED_EQ> #CircledEqualOp
+    | <CIRCLED_NE> #CircledNotEqualOp
 }
 
 void numeric_op() #Operator :
 {}
 {
-    <STARSHIP> | <BAT>
-    | <TILDE>
+    <STARSHIP> #StarshipOp
+    | <BAT> #BatOp
+    | <TILDE> #TildeOp
 }
 
 void arith_op() #Operator :
 {}
 {
-    <PLUS> | <MINUS>
-    | <PLUS_PLUS> | <MINUS_MINUS>
-    | <CIRCLED_PLUS> | <CIRCLED_MINUS>
-    | <BOXED_PLUS> | <BOXED_MINUS>
+    <PLUS> #PlusOp
+    | <MINUS> #MinusOp
+    | <PLUS_PLUS> #DoublePlusOp
+    | <MINUS_MINUS> #DoubleMinusOp
+    | <CIRCLED_PLUS> #CircledPlusOp
+    | <CIRCLED_MINUS> #CircledMinusOp
+    | <BOXED_PLUS> #BoxedPlusOp
+    | <BOXED_MINUS> #BoxedMinusOp
 }
 
 void prod_op() #Operator :
 {}
 {
-    <AST> | <SLASH>
-    | <KW_DIV> | <KW_MOD>
-    | <TIMES> | <PERCENT>
-    | <AST_SLASH> | <SLASH_AST>
-    | <CIRCLED_AST> | <CIRCLED_SLASH>
-    | <CIRCLED_TIMES> | <CIRCLED_DOT>
-    | <BOXED_AST> | <BOXED_SLASH>
-    | <BOXED_TIMES> | <BOXED_DOT>
-    | <BOXED_COLON> | <SLASH_SLASH>
+    <AST> 
+    | <SLASH>
+    | <KW_DIV> 
+    | <KW_MOD>
+    | <TIMES> 
+    | <PERCENT>
+    | <AST_SLASH> 
+    | <SLASH_AST>
+    | <CIRCLED_AST> 
+    | <CIRCLED_SLASH>
+    | <CIRCLED_TIMES> 
+    | <CIRCLED_DOT>
+    | <BOXED_AST> 
+    | <BOXED_SLASH>
+    | <BOXED_TIMES> 
+    | <BOXED_DOT>
+    | <BOXED_COLON> 
+    | <SLASH_SLASH>
 }
 
 void pow_op() #Operator :
@@ -1331,11 +1371,13 @@ void tight_op() #Operator() :
     | <QUEST> | <QQ>
     | <QEX> | <EXQ>
     | <BAR> | <BAR_BAR>
-    | <AMP> | <AMP_AMP>
+    | <AMP>
+    | <AMP_AMP>
     | <CARET_CARET>
     | <BOXED_QUEST>
     | <BOXED_QUOTE>
-    | <PLUS_MINUS> | <MINUS_PLUS>
+    | <PLUS_MINUS>
+    | <MINUS_PLUS>
 }
 
 void sign() :

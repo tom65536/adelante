@@ -35,6 +35,14 @@
     <connection>scm:git:git@github.com:tom65536/adelante.git</connection>
     <developerConnection>scm:git:git@github.com:tom65536/adelante.git</developerConnection>
   </scm>
+  <issueManagement>
+    <system>github.com</system>
+    <url>https://github.com/tom65536/adelante/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>github actions</system>
+    <url>https://github.com/tom65536/adelante/actions</url>
+  </ciManagement>
   <distributionManagement>
     <repository>
       <id>jitpack.io</id>

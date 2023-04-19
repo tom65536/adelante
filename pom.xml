@@ -46,7 +46,7 @@
   <distributionManagement>
     <repository>
       <id>jitpack.io</id>
-		  <url>https://jitpack.io</url>
+      <url>https://jitpack.io</url>
     </repository>
     <site>
       <id>github</id>
@@ -65,16 +65,16 @@
 
   </properties>
 
-  <dependencies>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.1</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.7.1</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <pluginManagement>

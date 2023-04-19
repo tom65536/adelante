@@ -1335,30 +1335,32 @@ void arith_op() #Operator :
 void prod_op() #Operator :
 {}
 {
-    <AST> 
-    | <SLASH>
-    | <KW_DIV> 
-    | <KW_MOD>
-    | <TIMES> 
-    | <PERCENT>
-    | <AST_SLASH> 
-    | <SLASH_AST>
-    | <CIRCLED_AST> 
-    | <CIRCLED_SLASH>
-    | <CIRCLED_TIMES> 
-    | <CIRCLED_DOT>
-    | <BOXED_AST> 
-    | <BOXED_SLASH>
-    | <BOXED_TIMES> 
-    | <BOXED_DOT>
-    | <BOXED_COLON> 
-    | <SLASH_SLASH>
+    <AST> #AsteriskOp
+    | <SLASH> #SlashOp
+    | <KW_DIV> #DivOp
+    | <KW_MOD> #ModOp
+    | <TIMES> #TimesOp
+    | <PERCENT> #PercentOp
+    | <AST_SLASH> #AsteriskSlashOp
+    | <SLASH_AST> #SlashAsteriskOp
+    | <CIRCLED_AST> #CircledAateriskOp
+    | <CIRCLED_SLASH> #CircledSlashOp
+    | <CIRCLED_TIMES> #CircledTimesOp
+    | <CIRCLED_DOT> #CircledDotOp
+    | <BOXED_AST> #BoxedAsteriskOp
+    | <BOXED_SLASH> #BoxedSlashOp
+    | <BOXED_TIMES> #BoxedTimesOp
+    | <BOXED_DOT> #BoxedDotOp
+    | <BOXED_COLON> #BoxedColonOp
+    | <SLASH_SLASH> #SlashSlashOp
 }
 
 void pow_op() #Operator :
 {}
 {
-    <CARET> | <AST_AST> | <BOXED_CARET>
+    <CARET> #CaretOp
+    | <AST_AST> #DoubleAsteriskOp
+    | <BOXED_CARET> #BoxedCaretOp
 }
 
 void tight_op() #Operator() :

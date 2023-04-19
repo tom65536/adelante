@@ -10,6 +10,20 @@
   <name>adelante-parent</name>
   <url>https://tom65536.github.io/adelante</url>
 
+  <developers>
+    <developer>
+      <id>tom65536</id>
+      <name>Thomas Reiter</name>
+      <email>peregrinus@planet.ms</email>
+      <url>https://github.com/tom65536/</url>
+      <timezone>Europe/Berlin</timezone>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
   <modules>
 
     <module>adelante-compiler-frontend</module>
@@ -23,8 +37,8 @@
   </scm>
   <distributionManagement>
     <repository>
-      <id>maven-repo</id>
-      <url>file://${project.build.directory}/mvn-repo</url>
+      <id>jitpack.io</id>
+		  <url>https://jitpack.io</url>
     </repository>
     <site>
       <id>github</id>

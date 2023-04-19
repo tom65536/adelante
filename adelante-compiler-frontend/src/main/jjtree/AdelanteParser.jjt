@@ -1366,35 +1366,42 @@ void pow_op() #Operator :
 void tight_op() #Operator() :
 {}
 {
-    <KW_NOT>
-    | <LL> | <GG>
-    | <LLL> | <GGG>
-    | <EXCLAM> | <EE>
-    | <QUEST> | <QQ>
-    | <QEX> | <EXQ>
-    | <BAR> | <BAR_BAR>
-    | <AMP>
-    | <AMP_AMP>
-    | <CARET_CARET>
-    | <BOXED_QUEST>
-    | <BOXED_QUOTE>
-    | <PLUS_MINUS>
-    | <MINUS_PLUS>
+    <KW_NOT> #NotOp
+    | <LL> #DoubleLessThanOp
+    | <GG> #DoubleGreaterThanOp
+    | <LLL> #TripleLessThanOp
+    | <GGG> #TripleGreaterThanOo
+    | <EXCLAM> #ExclamationOp
+    | <EE> #DoubleExclamationOp
+    | <QUEST> #QuestionOp
+    | <QQ> #DoubleQuestionOp
+    | <QEX> #QuestionExclamationOp
+    | <EXQ> #ExclamationQuestionOp
+    | <BAR> #VerticalBarOp
+    | <BAR_BAR> #DoubleVerticalBarOp
+    | <AMP> #AmpersandOp
+    | <AMP_AMP> #DoubleAmpersandOp
+    | <CARET_CARET> #DoubleCaretOp
+    | <BOXED_QUEST> #BoxedQuestionOp
+    | <BOXED_QUOTE> #BoxedSingleQuoteOp
+    | <PLUS_MINUS> #PlusMinusOp
+    | <MINUS_PLUS> #MinusPlusOp
 }
 
 void sign() :
 {}
 {
-    <PLUS> | <MINUS>
+    <PLUS>
+    | <MINUS> #Minus
 }
 
-void identifier() :
+void identifier() #Identifier :
 {}
 {
     <IDENTIFIER>
 }
 
-void identifier_ref() :
+void identifier_ref() #IdentifierRef :
 {}
 {
     <IDENTIFIER>
@@ -1408,33 +1415,33 @@ void nl() #void :
     | <EOF>
 }
 
-void decimal_literal() :
+void decimal_literal() #IntegerDenotation :
 {}
 {
     <DECIMAL_LITERAL>
 }
 
-void integer_denotation() :
+void integer_denotation() #IntegerDenotation :
 {}
 {
     (<DECIMAL_LITERAL> | <RADIX_LITERAL>)
     [dimension()]
 }
 
-void real_denotation() :
+void real_denotation() #RealDenotation :
 {}
 {
     <REAL_LITERAL> [dimension()]
 }
 
-void bool_denotation() :
+void bool_denotation() #void :
 {}
 {
     (<KW_TRUE>) #TrueDenotation()
     | (<KW_FALSE>) #FalseDenotation()
 }
 
-void text_denotation() :
+void text_denotation() #TextDenotation :
 {}
 {
     <TEXT_LITERAL>

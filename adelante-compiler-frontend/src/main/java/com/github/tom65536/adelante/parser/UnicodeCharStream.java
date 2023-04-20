@@ -41,5 +41,62 @@ public class UnicodeCharStream implements CharStream {
         return (char) ch;
     }
     
-    
+    public int getColumn() {
+        return 0;
+    }
+
+    public int getLine() {
+        return 0;
+    }
+
+    public int getBeginColumn() {
+        return 0;
+    }
+
+    public int getBeginLine() {
+        return 0;
+    }
+
+    public int getEndColumn() {
+        return 0;
+    }
+
+    public int getEndLine() {
+        return 0;
+    }
+
+    public int getTabSize() {
+        return 4;
+    }
+
+    public void backup(final int amount) {
+
+    }
+
+    public char BeginToken() throws IOException {
+        return 'x';
+    }
+
+    public String getImage() {
+        return "";
+    }
+
+    public char[] GetSuffix(final int len) {
+        return new char[0];
+    }
+
+    public void Done() {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch(IOException ex) {
+                // ignore
+            }
+            reader = null;
+        }
+    }
+
+    public void setTabSize( final int text_size) {
+        
+    }
 }

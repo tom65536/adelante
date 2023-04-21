@@ -17,18 +17,23 @@ import org.apache.commons.io.ByteOrderMark;
 public class UnicodeReader extends Reader {
 
     private final transient BOMInputStream in;
-    private transient InputStreamReader delegate_reader;
+    private transient Reader delegate_reader;
+    private transient Charset charset;
     
     public UnicodeReader(final InputStream raw) {
         super(raw);
         this.in = new BOMInputStream(raw);
     }
 
+    public Charset getCharset() throws IOException {
+        ensure_delegate();
+        return charset;
+    }
+
     private Reader ensure_delegate() throws IOException {
         if(delegate_reader == null) {
             synchronized(lock) {
                 if(delegate_reader == null) {
-                    final Charset charset;
                     if(!in.hasBOM()) charset = StandardCharsets.UTF_8;
                     else if(in.hasBOM(ByteOrderMark.UTF_8)) charset = StandardCharsets.UTF_8;
                     else if(in.hasBOM(ByteOrderMark.UTF_16LE)) charset = StandardCharsets.UTF_16LE;

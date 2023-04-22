@@ -2,6 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/tom65536/adelante)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tom65536/adelante/maven.yml)
 [![CodeQL](https://github.com/tom65536/adelante/actions/workflows/codeql.yml/badge.svg)](https://github.com/tom65536/adelante/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/tom65536/adelante/branch/main/graph/badge.svg?token=NLJOAC369J)](https://codecov.io/gh/tom65536/adelante)
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/tom65536/adelante)
 ![maturity](https://img.shields.io/badge/maturity-%F0%9F%9A%A7%20WIP-red)
 

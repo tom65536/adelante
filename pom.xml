@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.tom65536</groupId>
@@ -50,7 +51,8 @@
     </repository>
     <site>
       <id>github</id>
-      <url>https://tom65536.github.io/adelante/</url>
+      <!--url>https://tom65536.github.io/adelante/</url-->
+      <url>scm:git:git@github.com:tom65536/adelante.git</url>
     </site>
   </distributionManagement>
 
@@ -61,7 +63,7 @@
     <maven.compiler.source>11</maven.compiler.source>
 
     <maven.compiler.target>11</maven.compiler.target>
-    <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
+    <!--github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token-->
 
   </properties>
 
@@ -96,7 +98,15 @@
         </plugin>
 
         <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
+            <scmBranch>gh-pages</scmBranch>
+          </configuration>
+        </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
@@ -142,7 +152,7 @@
             </execution>
           </executions>
         </plugin>
-        <plugin><!-- a hint for IDE's to add the java sources to the classpath -->
+        <plugin>          <!-- a hint for IDE's to add the java sources to the classpath -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>3.3.0</version>
@@ -182,14 +192,14 @@
           <version>0.8.9</version>
         </plugin>
 
-        <plugin>
+        <!--plugin>
           <groupId>com.github.github</groupId>
           <artifactId>site-maven-plugin</artifactId>
           <version>0.12</version>
           <configuration>
             <message>Updating to ${project.artifactId}-${project.version}</message>
           </configuration>
-        </plugin>
+        </plugin-->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>tidy-maven-plugin</artifactId>
@@ -204,6 +214,14 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>3.2.1</version>
+          <configuration>
+            <scmBranch>gh-pages</scmBranch>
+          </configuration>
+        </plugin>
       </plugins>
 
     </pluginManagement>
@@ -216,6 +234,13 @@
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <configuration>
+            <password>${env.GITHUB_OAUTH_TOKEN}</password>
+          </configuration>
+      </plugin>
+      <!--plugin>
         <groupId>com.github.github</groupId>
         <artifactId>site-maven-plugin</artifactId>
         <executions>
@@ -226,7 +251,7 @@
             <phase>site</phase>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
     </plugins>
   </build>
 

@@ -31,7 +31,12 @@ public class UnicodeReaderTest {
 
     @Test(dataProvider = "bom-provider")
     void testBOMInputStream(final ByteOrderMark bom) throws IOException {
-        final BOMInputStream in = new BOMInputStream(encodeSentence(bom));
+        final BOMInputStream in = new BOMInputStream(encodeSentence(bom),
+            false,
+            ByteOrderMark.UTF_8,
+            ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_16LE
+        );
         assertEquals(in.getBOM(), bom);
     }
 
@@ -40,8 +45,10 @@ public class UnicodeReaderTest {
         final int boml = (bom == null)? 0 : bom.length();
         final byte[] sent = SENTENCE.getBytes(chs);
         final byte[] raw = new byte[sent.length+boml];
-        System.arraycopy(bom.getBytes(), 0, raw, 0, boml);
-        System.arraycopy(sent, 0, raw, bom.length(), sent.length);
+        if(bom != null) {
+            System.arraycopy(bom.getBytes(), 0, raw, 0, boml);
+        }
+        System.arraycopy(sent, 0, raw, boml, sent.length);
         return new ByteArrayInputStream(raw);
     }
 

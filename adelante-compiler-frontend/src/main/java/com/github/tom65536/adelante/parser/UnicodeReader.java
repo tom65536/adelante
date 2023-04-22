@@ -22,7 +22,12 @@ public class UnicodeReader extends Reader {
     
     public UnicodeReader(final InputStream raw) {
         super(raw);
-        this.in = new BOMInputStream(raw);
+        this.in = new BOMInputStream(raw,
+            false,
+            ByteOrderMark.UTF_8,
+            ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_16LE
+        );
     }
 
     public Charset getCharset() throws IOException {

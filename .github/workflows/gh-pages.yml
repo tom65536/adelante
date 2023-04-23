@@ -25,7 +25,7 @@ jobs:
           server-id: github
       - name: Build and Push Site with Maven
         run: |
-           echo mvn --batch-mode verify site site:stage
+           mvn --batch-mode verify site site:stage
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:

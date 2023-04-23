@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.tom65536</groupId>
@@ -152,7 +151,7 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>          <!-- a hint for IDE's to add the java sources to the classpath -->
+        <plugin><!-- a hint for IDE's to add the java sources to the classpath -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>3.3.0</version>
@@ -192,14 +191,6 @@
           <version>0.8.9</version>
         </plugin>
 
-        <!--plugin>
-          <groupId>com.github.github</groupId>
-          <artifactId>site-maven-plugin</artifactId>
-          <version>0.12</version>
-          <configuration>
-            <message>Updating to ${project.artifactId}-${project.version}</message>
-          </configuration>
-        </plugin-->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>tidy-maven-plugin</artifactId>
@@ -214,14 +205,6 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-scm-publish-plugin</artifactId>
-          <version>3.2.1</version>
-          <configuration>
-            <scmBranch>gh-pages</scmBranch>
-          </configuration>
-        </plugin>
       </plugins>
 
     </pluginManagement>
@@ -232,26 +215,14 @@
       </plugin>
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
+        <dependencies>
+          <dependency>
+           <groupId>com.bernardomg.maven.skins</groupId>
+           <artifactId>docs-maven-skin</artifactId>
+           <version>2.3.2</version>
+          </dependency>
+        </dependencies>
       </plugin>
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-scm-publish-plugin</artifactId>
-          <configuration>
-            <password>${env.GITHUB_OAUTH_TOKEN}</password>
-          </configuration>
-      </plugin>
-      <!--plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>site</phase>
-          </execution>
-        </executions>
-      </plugin-->
     </plugins>
   </build>
 

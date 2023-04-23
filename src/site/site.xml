@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/DECORATION/1.8.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd"
+    name="Adelante">
 
     <skin>
         <groupId>com.bernardomg.maven.skins</groupId>
@@ -13,45 +14,12 @@
             <keywords>Programming Language, Teach, Learn</keywords>
             <topNav>
                 <menu>Documentation</menu>
-                <menu>Info and reports</menu>
             </topNav>
-            <bottomNav>
-                <menu>General Info</menu>
-                <menu>Code</menu>
-            </bottomNav>
-            <iconNav>
-                <menu>Icons</menu>
-            </iconNav>
         </skinConfig>
     </custom>
     <body>
-        <menu name="General Info" inherit="top">
+        <menu name="Documentation" inherit="top">
             <item name="About" href="./index.html" />
-        </menu>
-        <menu name="Documentation" inherit="bottom">
-            <item name="About" href="./index.html" />
-        </menu>
-        <menu name="Info and reports" inherit="bottom">
-            <item name="Info" href="./info.html" />
-            <item name="Reports" href="./reports.html" />
-            <item name="JavaDocs" href="./apidocs/" />
-        </menu>
-        <menu name="Code" inherit="bottom">
-            <item name="SCM" href="${this.scm.url}">
-                <description>GitHub</description>
-            </item>
-            <item name="CI" href="${this.ciManagement.url}">
-                <description>${this.ciManagement.system}</description>
-            </item>
-            <item name="Issues" href="${this.issueManagement.url}">
-                <description>${this.issueManagement.system}</description>
-            </item>
-        </menu>
-        <menu name="Releases" inherit="bottom">
-            <item name="JitPack.io" href="https://jitpack.io/#tom65536/adelante" />
-        </menu>
-        <menu name="Icons" inherit="bottom">
-            <item name="GitHub" img="fa-brands fa-github" href="${this.scm.url}" />
         </menu>
     </body>
 </project>

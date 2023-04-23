@@ -4,12 +4,17 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main]    
+  workflow_dispatch:
+    
+permissions:
+   contents: read
+   pages: write
+   id-token: write
 
 jobs:
-  build-and-deploy:
+  build-site:
     runs-on: ubuntu-latest
-    environment: github-pages
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -20,7 +25,20 @@ jobs:
           server-id: github
       - name: Build and Push Site with Maven
         run: |
-           echo mvn --batch-mode site
-        env:
-           GITHUB_OAUTH_TOKEN: ${{ secrets.GH_PAGES_PASS }}
+           echo mvn --batch-mode verify site site:stage
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+           path: target/staging
 
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-site
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

@@ -18,6 +18,9 @@
         </skinConfig>
     </custom>
     <body>
+        <head><![CDATA[<link rel="meta" type="application/rdf+xml"
+           href="${this.artifactId}-${this.version}.spdx.rdf.xml"/>]]></head>
+
         <menu name="Documentation" inherit="top">
             <item name="About" href="./index.html" />
         </menu>

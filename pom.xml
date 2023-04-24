@@ -50,7 +50,8 @@
     </repository>
     <site>
       <id>github</id>
-      <url>https://tom65536.github.io/adelante/</url>
+      <!--url>https://tom65536.github.io/adelante/</url-->
+      <url>scm:git:git@github.com:tom65536/adelante.git</url>
     </site>
   </distributionManagement>
 
@@ -61,7 +62,7 @@
     <maven.compiler.source>11</maven.compiler.source>
 
     <maven.compiler.target>11</maven.compiler.target>
-    <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
+    <!--github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token-->
 
   </properties>
 
@@ -96,7 +97,15 @@
         </plugin>
 
         <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
+            <scmBranch>gh-pages</scmBranch>
+          </configuration>
+        </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
@@ -183,14 +192,6 @@
         </plugin>
 
         <plugin>
-          <groupId>com.github.github</groupId>
-          <artifactId>site-maven-plugin</artifactId>
-          <version>0.12</version>
-          <configuration>
-            <message>Updating to ${project.artifactId}-${project.version}</message>
-          </configuration>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>tidy-maven-plugin</artifactId>
           <version>1.2.0</version>
@@ -214,18 +215,13 @@
       </plugin>
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>site</phase>
-          </execution>
-        </executions>
+        <dependencies>
+          <dependency>
+           <groupId>com.bernardomg.maven.skins</groupId>
+           <artifactId>docs-maven-skin</artifactId>
+           <version>2.3.2</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

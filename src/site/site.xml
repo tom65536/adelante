@@ -14,12 +14,28 @@
             <keywords>Programming Language, Teach, Learn</keywords>
             <topNav>
                 <menu>Documentation</menu>
+                <menu>About the Project</menu>
             </topNav>
+            <iconNav>
+                <menu>Icons</menu>
+            </iconNav>
         </skinConfig>
     </custom>
     <body>
+        <head><![CDATA[<link rel="meta" type="application/rdf+xml"
+           href="${this.artifactId}-${this.version}.spdx.rdf.xml"/>]]></head>
+        <footer><![CDATA[<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.]]></footer>
+
         <menu name="Documentation" inherit="top">
             <item name="About" href="./index.html" />
+        </menu>
+        <menu name="About the Project" inherit="top">
+            <item name="Info" href="./project-info.html" />
+            <item name="Reports" href="./project-reports.html" />
+            <item name="GitHub" href="${this.scm.url}" />
+        </menu>
+        <menu name="Icons" inherit="bottom">
+            <item name="GitHub" img="fa-brands fa-github" href="${this.scm.url}" />
         </menu>
     </body>
 </project>

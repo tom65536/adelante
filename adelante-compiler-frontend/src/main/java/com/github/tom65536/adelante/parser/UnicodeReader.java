@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.input.BOMInputStream;
@@ -15,11 +16,26 @@ import org.apache.commons.io.ByteOrderMark;
  * Implementation of an {@link InputStreamReader} respecting the BOM.
  */
 public class UnicodeReader extends Reader {
-
+    /**
+     * Thw input stream pocessinf the BOM.
+     */
     private final transient BOMInputStream in;
-    private transient Reader delegate_reader;
+
+    /**
+     * The underlying reader.
+     */
+    private transient Reader delegateReader;
+
+    /**
+     * Characterset  determined by the BOM.
+     */
     private transient Charset charset;
-    
+
+    /**
+     * Initialize a new instance of the {@link UnicodeReader} class.
+     *
+     * @param raw the input stream to be wrapped.
+     */
     public UnicodeReader(final InputStream raw) {
         super(raw);
         this.in = new BOMInputStream(raw,
@@ -30,39 +46,61 @@ public class UnicodeReader extends Reader {
         );
     }
 
+    /**
+     * Get the detected character set.
+     *
+     * @return the detected character set.
+     * @throws IOException if the underlying stream cannot be read.
+     */
     public Charset getCharset() throws IOException {
-        ensure_delegate();
+        ensureDelegate();
         return charset;
     }
 
-    private Reader ensure_delegate() throws IOException {
-        if(delegate_reader == null) {
-            synchronized(lock) {
-                if(delegate_reader == null) {
-                    if(!in.hasBOM()) charset = StandardCharsets.UTF_8;
-                    else if(in.hasBOM(ByteOrderMark.UTF_8)) charset = StandardCharsets.UTF_8;
-                    else if(in.hasBOM(ByteOrderMark.UTF_16LE)) charset = StandardCharsets.UTF_16LE;
-                    else if(in.hasBOM(ByteOrderMark.UTF_16BE)) charset = StandardCharsets.UTF_16BE;
-                    else { throw new IOException("The charset of the input file is not supported.");}
-                    delegate_reader = new InputStreamReader(in, charset);
+    /**
+     * Ensure that the underlying reader has been initialized.
+     *
+     * @return the underlying reader
+     * @throws IOException if the underlying stream cannot be read.
+     */
+    private Reader ensureDelegate() throws IOException {
+        if (delegateReader == null) {
+            synchronized (lock) {
+                if (delegateReader == null) {
+                    try {
+                        charset = (in.hasBOM())
+                        ? Charset.forName(in.getBOM().getCharsetName())
+                        : StandardCharsets.UTF_8;
+                        delegateReader = new InputStreamReader(in, charset);
+                    } catch (IllegalCharsetNameException ex) {
+                        throw new IOException(ex);
+                    }
                 }
             }
         }
-        return delegate_reader;
+        return delegateReader;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void close() throws IOException {
-        synchronized(lock) {
-            if(delegate_reader != null) {
-                delegate_reader.close();
+        synchronized (lock) {
+            if (delegateReader != null) {
+                delegateReader.close();
             }
         }
     }
 
-    public int read(char[] cbuf,
-    int off,
-    int len) throws IOException {
-        return ensure_delegate().read(
+    /**
+     * {@inheritDoc}
+     */
+    public int read(
+        final char[] cbuf,
+        final int off,
+        final int len
+    ) throws IOException {
+        return ensureDelegate().read(
             cbuf, off, len
         );
     }

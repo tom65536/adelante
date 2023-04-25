@@ -7,8 +7,21 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>adelante-parent</name>
+  <name>Adelante</name>
+  <description>Adelante, an advanced elementary language for teaching and education</description>
   <url>https://tom65536.github.io/adelante</url>
+  <inceptionYear>2023</inceptionYear>
+  <organization>
+    <name>Thomas Reiter</name>
+    <url>https://github.com/tom65536/</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>AGPL-3.0-or-later</name>
+      <url>https://spdx.org/licenses/AGPL-3.0-or-later.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
@@ -25,9 +38,7 @@
   </developers>
 
   <modules>
-
     <module>adelante-compiler-frontend</module>
-
   </modules>
 
   <scm>
@@ -50,20 +61,14 @@
     </repository>
     <site>
       <id>github</id>
-      <!--url>https://tom65536.github.io/adelante/</url-->
       <url>scm:git:git@github.com:tom65536/adelante.git</url>
     </site>
   </distributionManagement>
 
   <properties>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     <maven.compiler.source>11</maven.compiler.source>
-
     <maven.compiler.target>11</maven.compiler.target>
-    <!--github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token-->
-
   </properties>
 
   <dependencyManagement>
@@ -73,7 +78,6 @@
         <artifactId>commons-io</artifactId>
         <version>2.11.0</version>
       </dependency>
-
       <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
@@ -84,19 +88,12 @@
   </dependencyManagement>
 
   <build>
-    <pluginManagement>
-      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-
-      <plugins>
-
-        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-
+    <pluginManagement>      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
-        </plugin>
-
-        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        </plugin>        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
@@ -107,30 +104,43 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.spdx</groupId>
+          <artifactId>spdx-maven-plugin</artifactId>
+          <!-- please check for updates on https://search.maven.org/search?q=a:spdx-maven-plugin -->
+          <version>0.5.4</version>
+          <executions>
+            <execution>
+              <id>build-spdx</id>
+              <goals>
+                <goal>createSPDX</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <excludedFilePatterns>
+              <param>*.spdx</param>
+            </excludedFilePatterns>            <!-- See documentation below for additional configuration --></configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
@@ -171,26 +181,25 @@
               </configuration>
             </execution>
           </executions>
+        </plugin>        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+        <plugin>
+         <groupId>org.codehaus.mojo</groupId>
+         <artifactId>taglist-maven-plugin</artifactId>
+         <version>3.0.0</version>
         </plugin>
-
-        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
           <version>3.7.1</version>
         </plugin>
-
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.9</version>
         </plugin>
-
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>tidy-maven-plugin</artifactId>
@@ -205,8 +214,53 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.7.3.4</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+            <xmlOutput>true</xmlOutput>
+            <htmlOutput>true</htmlOutput>
+            <sarifOutput>true</sarifOutput>
+            <plugins>
+              <plugin>
+                <groupId>com.mebigfatguy.sb-contrib</groupId>
+                <artifactId>sb-contrib</artifactId>
+                <version>7.6.0</version>
+              </plugin>
+            </plugins>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.20.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.2.2</version>
+          <configuration>
+            <sourceDirectories>
+              <sourceDirectory>src/main/java</sourceDirectory>
+            </sourceDirectories>
+          </configuration>
+        </plugin>
       </plugins>
-
     </pluginManagement>
     <plugins>
       <plugin>
@@ -217,17 +271,71 @@
         <artifactId>maven-site-plugin</artifactId>
         <dependencies>
           <dependency>
-           <groupId>com.bernardomg.maven.skins</groupId>
-           <artifactId>docs-maven-skin</artifactId>
-           <version>2.3.2</version>
+            <groupId>com.bernardomg.maven.skins</groupId>
+            <artifactId>docs-maven-skin</artifactId>
+            <version>2.3.2</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>          <!--configLocation>checkstyle.xml</configLocation-->
+          <encoding>UTF-8</encoding>
+          <consoleOutput>true</consoleOutput>
+          <failsOnError>true</failsOnError>
+          <linkXRef>false</linkXRef>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
 
   <reporting>
     <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+        <configuration>
+          <aggregate>true</aggregate>
+          <tagListOptions>
+            <tagClasses>
+              <tagClass>
+                <displayName>Open Topics</displayName>
+                <tags>
+                  <tag>
+                    <matchString>todo</matchString>
+                    <matchType>ignoreCase</matchType>
+                  </tag>
+                  <tag>
+                    <matchString>FIXME</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                </tags>
+              </tagClass>
+            </tagClasses>
+          </tagListOptions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
@@ -249,8 +357,7 @@
         <reportSets>
           <reportSet>
             <id>default</id>
-            <configuration>
-            </configuration>
+            <configuration></configuration>
             <reports>
               <report>javadoc</report>
               <report>test-javadoc</report>
@@ -258,13 +365,53 @@
           </reportSet>
           <reportSet>
             <id>aggregate</id>
-            <configuration>
-            </configuration>
+            <configuration></configuration>
             <reports>
               <report>aggregate</report>
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <linkXref>true</linkXref>
+          <inputEncoding>utf-8</inputEncoding>
+          <minimumTokens>100</minimumTokens>
+          <targetJdk>${maven.compiler.target}</targetJdk>
+          <excludes>
+            <exclude>**/*Bean.java</exclude>
+            <exclude>**/generated/*.java</exclude>
+          </excludes>
+          <excludeRoots>
+            <excludeRoot>target/generated-sources/java</excludeRoot>
+          </excludeRoots>
+        </configuration>
+        <reportSets>
+          <reportSet>            <!-- by default, id = "default" -->
+            <reports>              <!-- select non-aggregate reports -->
+              <report>pmd</report>
+              <report>cpd</report>
+            </reports>
+          </reportSet>
+          <reportSet>            <!-- aggregate reportSet, to define in poms having modules -->
+            <id>aggregate</id>
+            <inherited>false</inherited>            <!-- don't run aggregate in child modules -->
+            <reports>
+              <report>aggregate-pmd</report>
+              <report>aggregate-cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>

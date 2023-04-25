@@ -32,7 +32,7 @@
         <menu name="About the Project" inherit="top">
             <item name="Info" href="./project-info.html" />
             <item name="Reports" href="./project-reports.html" />
-            <item name="GitHub" href="https://github.com/tom65536/adelante/" />
+            <item name="GitHub" href="${this.scm.url}" />
         </menu>
         <menu name="Icons" inherit="bottom">
             <item name="GitHub" img="fa-brands fa-github" href="${this.scm.url}" />

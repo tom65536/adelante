@@ -28,11 +28,30 @@ public class ParserTestScenario {
      */
     private String source;
     
+    /**
+     * Get the title.
+     * 
+     * @return the title.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Get the name of the production.
+     * 
+     * @return the name of the production.
+     */
     public String getProduction() {
         return production;
+    }
+
+    /**
+     * Get the source being passed to the parser.
+     * 
+     * @return the source code being passed to the parser
+     */
+    public String getSource() {
+        return source;
     }
 }

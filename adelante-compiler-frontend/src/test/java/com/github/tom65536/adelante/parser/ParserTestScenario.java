@@ -1,5 +1,13 @@
 package com.github.tom65536.adelante.parser;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+
+import javax.management.RuntimeErrorException;
+
 /**
  * Test scenario for testing the parser.
  * 
@@ -27,6 +35,13 @@ public class ParserTestScenario {
      * The source passed ro the parser.
      */
     private String source;
+
+    /**
+     * Assertion about the AST.
+     * If the assertion is {@code null}
+     * the parser is expected to fail.
+     */
+    private SyntaxTreeAssertion ast;
     
     /**
      * Get the title.
@@ -53,5 +68,24 @@ public class ParserTestScenario {
      */
     public String getSource() {
         return source;
+    }
+
+    /**
+     * Check the scenario for a given parser.
+     * 
+     * @param parser the parser to be checked.
+     */
+    public void check(final AdelanteParser parser) throws IOException {
+        final var raw = new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8));
+        final var reader = new UnicodeReader(raw);
+        parser.ReInit(reader);
+
+        try {
+            var method = parser.getClass().getMethod(production);
+            method.invoke(parser);
+        } catch(NoSuchMethodException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }

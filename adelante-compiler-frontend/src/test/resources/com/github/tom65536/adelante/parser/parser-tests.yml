@@ -1,18 +1,20 @@
-parser-tests:
-   - title: empty program file
-     production: program_file
-     fail: false
-     source:
-     ast:
-   - title: a single identifier
-     production: program_file
-     fail: false
-     source: a variable
-     ast:
-        - class: "ASTProgram"
-          children:
-           - class: "ASTExpression"
-             children:
-              - class: "ASTIdentifier"
-                tokens:
-                   - image: "a variable"
+%YAML 1.2
+---
+title: empty program file
+production: program_file
+fail: false
+source: ""
+ast: []
+---
+title: a single identifier
+production: program_file
+fail: false
+source: a variable
+ast:
+  - class: "ASTProgram"
+    children: []
+  - class: "ASTExpression"
+    children:
+      - class: "ASTIdentifier"
+        tokens:
+          - a variable

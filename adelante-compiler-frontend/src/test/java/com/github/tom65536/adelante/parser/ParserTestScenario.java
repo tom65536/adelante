@@ -83,9 +83,16 @@ public class ParserTestScenario {
         try {
             var method = parser.getClass().getMethod(production);
             method.invoke(parser);
-        } catch(NoSuchMethodException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch(NoSuchMethodException | IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
+        } catch(InvocationTargetException ex) {
+            if (ex.getCause() instanceof ParseException) {
+                assert ast == null;
+            } else {
+                throw new RuntimeException(ex);
+            }
         }
+        final Node node = parser.jjtree.rootNode();
 
     }
 }

@@ -88,11 +88,14 @@ public class ParserTestScenario {
         } catch(InvocationTargetException ex) {
             if (ex.getCause() instanceof ParseException) {
                 assert ast == null;
+                return;
             } else {
                 throw new RuntimeException(ex);
             }
         }
         final Node node = parser.jjtree.rootNode();
+        assert ast != null;
+        ast.check(node);
 
     }
 }

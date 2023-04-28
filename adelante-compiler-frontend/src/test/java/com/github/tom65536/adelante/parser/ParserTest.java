@@ -14,12 +14,12 @@ public class ParserTest
     /**
      * Local path to the tests YAML filen
      */
-    public static final String TEST_FILE_PATH = "/" + ParserTest.class.getPackageName().replace('.', '/') + "/parser-tests.yml";
+    public static final String TEST_FILE_PATH = ParserTest.class.getPackageName().replace('.', '/') + "/parser-tests.yml";
 
     /**
      * Rigorous Test :-)
      */
-    @Test(dataProvider = "load-scenarios", enabled = false)
+    @Test(dataProvider = "load-scenarios", enabled = true)
     public void testScenario(final ParserTestScenario scenario)
         throws IOException
     {
@@ -29,7 +29,6 @@ public class ParserTest
 
     @DataProvider(name = "load-scenarios")
     public Object[][] loadScenariosFromTestResources() throws IOException {
-        System.out.println(TEST_FILE_PATH);
         final var url = getClass().getClassLoader().getResource(TEST_FILE_PATH);
         final var list = ParserTestScenario.fromYamlUrl(url);
         final Object[][] result = new Object[list.size()][];

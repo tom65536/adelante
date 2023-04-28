@@ -73,6 +73,15 @@ public class ParserTestScenario {
     }
 
     /**
+     * Get the syntax tree asdertion.
+     * 
+     * @return the syntax tree assertion
+     */
+    public SyntaxTreeAssertion getAst() {
+        return ast;
+    }
+
+    /**
      * Check the scenario for a given parser.
      * 
      * @param parser the parser to be checked.
@@ -97,7 +106,11 @@ public class ParserTestScenario {
         }
         final Node node = parser.jjtree.rootNode();
         assert ast != null;
-        ast.check(node);
+        try {
+            ast.check(node);
+        } catch (AssertionError err) {
+            throw new AssertionError("[" + title + "]" + err.getMessage(), err);
+        }
     }
 
     public static List<ParserTestScenario> fromYamlUrl(final URL url) throws IOException {

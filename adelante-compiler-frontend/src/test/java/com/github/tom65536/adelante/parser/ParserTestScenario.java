@@ -2,11 +2,13 @@ package com.github.tom65536.adelante.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-import javax.management.RuntimeErrorException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * Test scenario for testing the parser.
@@ -96,6 +98,13 @@ public class ParserTestScenario {
         final Node node = parser.jjtree.rootNode();
         assert ast != null;
         ast.check(node);
+    }
 
+    public static List<ParserTestScenario> fromYamlUrl(final URL url) throws IOException {
+        final YAMLFactory yaml = new YAMLFactory();
+        final ObjectMapper mapper = new ObjectMapper(yaml);
+
+        return mapper.readValues(yaml.createParser(url), ParserTestScenario.class)
+            .readAll();
     }
 }

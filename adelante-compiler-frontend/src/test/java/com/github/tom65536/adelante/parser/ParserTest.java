@@ -12,6 +12,11 @@ import org.testng.annotations.*;
 public class ParserTest 
 {
     /**
+     * Local path to the tests YAML filen
+     */
+    public static final String TEST_FILE_PATH = "/" + ParserTest.class.getPackageName().replace('.', '/') + "/parser-tests.yml";
+
+    /**
      * Rigorous Test :-)
      */
     @Test(dataProvider = "load-scenarios", enabled = false)
@@ -24,8 +29,8 @@ public class ParserTest
 
     @DataProvider(name = "load-scenarios")
     public Object[][] loadScenariosFromTestResources() throws IOException {
-        final String path = "/" + getClass().getName().replace('.', '/');
-        final var url = getClass().getClassLoader().getResource(path + "/parser-tests.yml");
+        System.out.println(TEST_FILE_PATH);
+        final var url = getClass().getClassLoader().getResource(TEST_FILE_PATH);
         final var list = ParserTestScenario.fromYamlUrl(url);
         final Object[][] result = new Object[list.size()][];
         int i = 0;
@@ -36,4 +41,5 @@ public class ParserTest
         }
         return result;
     }
+
 }

@@ -18,6 +18,14 @@ ast:
   - kind: Packet
   - kind: Root
 ---
+title: packet file
+production: packet_file
+source: |
+  PACKET test
+  ENDTEST rest
+ast:
+  kind: Packet
+---
 title: a single identifier
 production: program
 source: a variable

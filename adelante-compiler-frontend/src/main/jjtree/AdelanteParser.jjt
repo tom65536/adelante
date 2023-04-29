@@ -1451,11 +1451,11 @@ void text_denotation() #TextDenotation :
       <TEXT_TAIL>
 }
 
-TOKEN : {
-    <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]>
+<*> TOKEN : {
+    <NL : ("\r")? "\n" | ["\u000B", "\f", "\u0085", "\u2028", "\u2029"]> : DEFAULT
 }
 
-TOKEN :{
+<DEFAULT> TOKEN :{
       <RESERVED_SEMICOLON : ";">
     | <ELLIPSIS : "..." | "\u2026">
     | <RANGE : ".." | "\u2025">
@@ -1548,7 +1548,7 @@ TOKEN :{
     | <KW_CONTINUE : "CONTINUE">
     | <KW_DIV : "DIV">
     | <KW_DO : "DO">
-    | <KW_DOC : "DOC" | "DOCUMENTATION">
+    | <KW_DOC : "DOC" | "DOCUMENTATION"> : <DOC>
     | <KW_ELIF : "ELIF" | "ELSIF" | "ELSEIF">
     | <KW_ELSE : "ELSE">
     | <KW_END : "END">
@@ -2496,7 +2496,7 @@ TOKEN :{
     | <IDENTIFIER : <START_BLOCK> ((<MEDIAL>)+ <CONTINUE_BLOCK>)* | <UPPER> >
 }
 
-SPECIAL_TOKEN : {
+<DEFAULT> SPECIAL_TOKEN : {
       <WS : ([
             "\t", " ", "\u00A0",
             "\u0168",
@@ -2508,13 +2508,16 @@ SPECIAL_TOKEN : {
     | <ESCAPED_NL : <NL> (<WS>)? "'">
 }
 
-TOKEN : {
+<DOC> TOKEN : {
       <DOCUMENTATION :
         (
               ~["\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]
             | <ESCAPED_NL>
-        )+>
-    | <#TEXT_CONTENTS :
+        )+> : DEFAULT
+}
+
+<DEFAULT> TOKEN : {
+    <#TEXT_CONTENTS :
         (
               ~["\"", "`",
                 "\r", "\n", "\u000B", "\f", "\u0085", "\u2028", "\u2029"]

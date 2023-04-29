@@ -7,6 +7,17 @@ ast:
   kind: Program
   children: []
 ---
+title: program with packet
+production: program
+source: |
+  PACKET test
+  ENDPACKET test
+ast:
+  kind: Program
+  children:
+  - kind: Packet
+  - kind: Root
+---
 title: a single identifier
 production: program
 source: a variable

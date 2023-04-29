@@ -49,7 +49,11 @@ public class SyntaxTreeAssertion {
         return tokens;
     }
 
-
+    /**
+     * Check the assertion.
+     * 
+     * @param node the node ro compare with
+     */
     public void check(final Node node) {
         assert kind.equals(AdelanteParserTreeConstants.jjtNodeName[node.getId()]) :
         "Node of kind " +

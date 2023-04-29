@@ -2,22 +2,33 @@ package com.github.tom65536.adelante.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
+import org.testng.ITest;
 import org.testng.annotations.*;
 
 /**
  * Unit test for the adelante parser.
  */
-public class ParserTest 
+public class ParserTest implements ITest
 {
     /**
      * Local path to the tests YAML filen
      */
     public static final String TEST_FILE_PATH = ParserTest.class.getPackageName().replace('.', '/') + "/parser-tests.yml";
 
+    private ThreadLocal<String> testName = new ThreadLocal<>();
+
+    @BeforeMethod
+    public void beforeMethod(Method method, Object[] testData){
+        testName.set(method.getName() + ":" + testData[0].toString());
+    }
+
     /**
-     * Rigorous Test :-)
+     * Repeated test for a fiven scenario.
+     * 
+     * @param scenario the scenario ro be tested
      */
     @Test(dataProvider = "load-scenarios", enabled = true)
     public void testScenario(final ParserTestScenario scenario)
@@ -41,4 +52,8 @@ public class ParserTest
         return result;
     }
 
+    @Override
+    public String getTestName() {
+       return testName.get();
+    }
 }

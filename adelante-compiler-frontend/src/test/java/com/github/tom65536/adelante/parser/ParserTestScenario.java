@@ -98,14 +98,16 @@ public class ParserTestScenario {
             throw new RuntimeException(ex);
         } catch(InvocationTargetException ex) {
             if (ex.getCause() instanceof ParseException) {
-                assert ast == null;
+                assert ast == null :
+                    ex.getCause().getMessage();
                 return;
             } else {
                 throw new RuntimeException(ex);
             }
         }
         final Node node = parser.jjtree.rootNode();
-        assert ast != null;
+        assert ast != null :
+            "expected to fail";
         try {
             ast.check(node);
         } catch (AssertionError err) {
@@ -113,6 +115,20 @@ public class ParserTestScenario {
         }
     }
 
+    @Override
+    public String toString() {
+        if(title == null) {
+            return "@" + production;
+        }
+        return title;
+    }
+
+    /**
+     * Load test scenarios from YAML file.
+     * 
+     * @param url the URL to be read from
+     * @throws IOException if the YAML file cannot be read
+     */
     public static List<ParserTestScenario> fromYamlUrl(final URL url) throws IOException {
         final YAMLFactory yaml = new YAMLFactory();
         final ObjectMapper mapper = new ObjectMapper(yaml);

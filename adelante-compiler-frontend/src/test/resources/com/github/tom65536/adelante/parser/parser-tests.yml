@@ -16,7 +16,6 @@ ast:
   kind: Program
   children:
   - kind: Packet
-  - kind: Root
 ---
 title: packet file
 production: packet_file
@@ -42,3 +41,31 @@ ast:
           tokens:
           - kind: "<IDENTIFIER>"
             image: a variable
+---
+title: obsolete package
+production: program
+source: |
+  OBSOLETE BECAUSE renamed as: xxx
+  PACKET yyy
+  END PACKET yyy
+ast:
+  kind: Program
+  children:
+    - kind: Packet
+      children:
+      - kind: Obsoletion
+        children:
+        - kind: Reason
+          tokens:
+          - kind: "\"BECAUSE\""
+          - kind: "<DOCUMENTATION>"
+            image: " renamed as: xxx"
+      - kind: Identifier
+        tokens:
+        - kind: "<IDENTIFIER>"
+          image: yyy
+      - kind: BlockTail
+
+
+
+      

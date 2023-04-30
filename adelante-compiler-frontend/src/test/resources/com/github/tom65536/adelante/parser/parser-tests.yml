@@ -65,7 +65,32 @@ ast:
         - kind: "<IDENTIFIER>"
           image: yyy
       - kind: BlockTail
+---
+title: packet with body
+production: packet
+source: |
+  PACKET p
+    LET pi = 3.14
+  END PACKET p
+ast:
+  kind: Packet
+  children:
+  - kind: Identifier
+  - kind: ExpressionSynonym
+  - kind: BlockTail
+---
+title: obsolete packet and obsolete procedure
+production: program
+source: |
+  OBSOLETE PACKET P
+  END PACKET P
 
+  OBSOLETE BECAUSE a
+  ' b
+
+  PROC aa
+  END PROC aa
+  ast: 
 
 
       

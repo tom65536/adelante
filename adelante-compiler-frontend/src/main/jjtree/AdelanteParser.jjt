@@ -1538,7 +1538,7 @@ void text_denotation() #TextDenotation :
     | <KW_ALL : "ALL">
     | <KW_AND : "AND">
     | <KW_AS : "AS">
-    | <KW_BECAUSE : "BECAUSE">
+    | <KW_BECAUSE : "BECAUSE"> : DOC
     | <KW_BY : "BY">
     | <KW_BOOL : "BOOL" ("EAN")?>
     | <KW_CASE : "CASE">
@@ -1548,7 +1548,7 @@ void text_denotation() #TextDenotation :
     | <KW_CONTINUE : "CONTINUE">
     | <KW_DIV : "DIV">
     | <KW_DO : "DO">
-    | <KW_DOC : "DOC" | "DOCUMENTATION"> : <DOC>
+    | <KW_DOC : "DOC" | "DOCUMENTATION"> : DOC
     | <KW_ELIF : "ELIF" | "ELSIF" | "ELSEIF">
     | <KW_ELSE : "ELSE">
     | <KW_END : "END">

@@ -22,7 +22,7 @@ title: packet file
 production: packet_file
 source: |
   PACKET test
-  ENDTEST rest
+  ENDPACKET rest
 ast:
   kind: Packet
 ---

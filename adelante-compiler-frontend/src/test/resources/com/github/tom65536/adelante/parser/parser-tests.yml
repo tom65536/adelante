@@ -79,18 +79,24 @@ ast:
   - kind: ExpressionSynonym
   - kind: BlockTail
 ---
-title: obsolete packet and obsolete procedure
-production: program
+title: obsolete package with reason
+production: packet
 source: |
-  OBSOLETE PACKET P
-  END PACKET P
-
-  OBSOLETE BECAUSE a
-  ' b
-
-  PROC aa
-  END PROC aa
-  ast: 
+  OBSOLETE BECAUSE line 1
+                 ' line 2
+  PACKET p
+  ENDPACKET p
+ast:
+  kind: Packet
+  children:
+  - kind: Obsoletion
+    children:
+    - kind: Reason
+      tokens:
+      - kind: "<DOCUMENTATION>"
+        image: " line 1\n line 2"
+  - kind: Identifier
+  - kind: BlockTail
 
 
       

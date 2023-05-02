@@ -80,10 +80,10 @@ ast:
   - kind: BlockTail
 ---
 title: obsolete package with reason
-production: packet
+production: packet_file
 source: |
   OBSOLETE BECAUSE line 1
-                 ' line 2
+  ' line 2
   PACKET p
   ENDPACKET p
 ast:
@@ -93,8 +93,9 @@ ast:
     children:
     - kind: Reason
       tokens:
+      - kind: "\"BECAUSE\""
       - kind: "<DOCUMENTATION>"
-        image: " line 1\n line 2"
+        image: " line 1\n' line 2"
   - kind: Identifier
   - kind: BlockTail
 

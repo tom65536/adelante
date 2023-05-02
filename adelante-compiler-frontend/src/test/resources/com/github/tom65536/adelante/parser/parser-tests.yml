@@ -70,13 +70,17 @@ title: packet with body
 production: packet
 source: |
   PACKET p
+    PUBLIC
     LET pi = 3.14
   END PACKET p
 ast:
   kind: Packet
   children:
   - kind: Identifier
-  - kind: ExpressionSynonym
+  - kind: Decl
+    children:
+    - kind: PublicModifier
+    - kind: ExpressionSynonym
   - kind: BlockTail
 ---
 title: obsolete package with reason
@@ -98,6 +102,25 @@ ast:
         image: " line 1\n' line 2"
   - kind: Identifier
   - kind: BlockTail
+---
+title: obsolete packet and obsolete proc
+production: program
+source: |
+  # a comment
 
+  OBSOLETE PACKET old fashioned
+  END PACKET
+
+  OBSOLETE PROC Buggy Algorithm(INT CONST N)
+  END PROC
+ast:
+  kind: Program
+  children:
+  - kind: Packet
+  - kind: Decl
+    children:
+    - kind: Obsoletion
+    - kind: ProcedureDecl
+  
 
       

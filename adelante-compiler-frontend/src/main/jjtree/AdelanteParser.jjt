@@ -223,13 +223,25 @@ void bottom_up_part() #void :
        bottom_up_decl() nl())+
 }
 
-void bottom_up_decl() #void :
+void bottom_up_decl() #Decl :
 {}
 {
-    [(<KW_PUBLIC>) #PublicModifier() [nl()]]
-    [obsoletion()]
+    [decl_modifiers()]
     exportable_decl()
     | local_decl()
+}
+
+void decl_modifiers() #void :
+{}
+{
+    pub_modifier() [nl()] [obsoletion() [nl()]]
+    | obsoletion() [nl()] [pub_modifier() [nl()]]
+}
+
+void pub_modifier() #PublicModifier :
+{}
+{
+    <KW_PUBLIC>
 }
 
 void exportable_decl() #void :

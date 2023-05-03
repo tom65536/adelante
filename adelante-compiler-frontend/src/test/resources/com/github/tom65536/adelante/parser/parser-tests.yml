@@ -121,6 +121,42 @@ ast:
     children:
     - kind: Obsoletion
     - kind: ProcedureDecl
-  
+---
+title: packet file with extra stuff should fail
+production: packet_file
+source: |
+  PACKET X
+  END PACKET
+
+  INT VAR y :: 0
+---
+title: a _bundle.pkt file
+production: bundle_file
+source: |
+  USES bundle tools
+  REQUIRES adelante extension x
+  DOC This bundle provides ...
+    '
+    ' KNOWN BUGS
+    '
+    ' * packet `foo` is still buggy
+  LET name = "extra samples"
+  LET scope = "tom65536"
+  LET authors = Authors:[
+    '   Author:["P. Master", "master@acme.com"]
+    ' ]
+  LET version = Version:[1, 0, 0]
+ast:
+  kind: BundleFile
+  children:
+  - kind: PacketUsage
+  - kind: PacketRequires
+  - kind: Documentation
+  - kind: ExpressionSynonym
+#  - kind: ExpressionSynonym
+#  - kind: ExpressionSynonym
+#  - kind: ExpressionSynonym
+
+    
 
       

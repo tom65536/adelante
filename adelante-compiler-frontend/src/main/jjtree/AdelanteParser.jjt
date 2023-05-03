@@ -55,7 +55,20 @@ void packet_file() #void :
 {}
 {
     [nl()]
-    packet()
+    packet_only()
+}
+
+// The bundle file "_bundle.pkt" describes the
+// publication record for a bundle of packets.
+// The properties are described as named expression synonyms.
+void bundle_file() #BundleFile :
+{}
+{
+    [nl()]
+    (uses_clause())*
+    (packet_requires())*
+    (documentation())*
+    (expression_synonym())*
 }
 
 // Packets are containers for code intended to be
@@ -65,8 +78,16 @@ void packet() #Packet :
 {}
 {
     packet_head()
-    (packet_body())?
+    [packet_body()]
     packet_tail()
+}
+
+void packet_only() #Packet :
+{}
+{
+    packet_head()
+    [packet_body()]
+    packet_tail_eof()
 }
 
 void packet_head() #void :
@@ -111,6 +132,13 @@ void packet_tail() #BlockTail :
     (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()] nl()
 }
 
+void packet_tail_eof() #BlockTail :
+{}
+{
+    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()]
+    (<NL>)* <EOF>
+}
+
 void packet_body() #void :
 {}
 {
@@ -150,7 +178,7 @@ void packet_ref() :
 {}
 {
     abs_packet_ref() [":" abs_packet_ref()]
-    rel_packet_ref()
+    | rel_packet_ref()
 }
 
 void abs_packet_ref() #PacketRefPart :

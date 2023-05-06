@@ -30,17 +30,18 @@ PARSER_END(AdelanteParser)
 void program() #Program :
 {}
 {
-    nl() [packets_or_packet_body()]
-    | packets_or_packet_body()
+    nl() [packets_or_body()]
+    | packets_or_body()
 }
 
-void packets_or_packet_body() #void :
+void packets_or_body() #void :
 {}
 {
     LOOKAHEAD([obsoletion() [nl()]] <KW_PACKET>)
-    packet()
-    [packets_or_packet_body()]
-    | [uses_clause()] packet_body()
+    packet() [packets_or_body()]
+    | [uses_clause()]
+      [LOOKAHEAD(bottom_up_part()] bottom_up_part()]
+      root_part()
 }
 
 // Packets which are not defined in the program file
@@ -142,9 +143,13 @@ void packet_tail_eof() #BlockTail :
 void packet_body() #void :
 {}
 {
-    LOOKAHEAD(bottom_up_decl())
-      bottom_up_part() [root() [top_down_part()]]
-    | root() [top_down_part()]
+    bottom_up_part()
+}
+
+void root_part() #void :
+{}
+{
+    root() [top_down_part()]
 }
 
 // A USES clause makes the public contents

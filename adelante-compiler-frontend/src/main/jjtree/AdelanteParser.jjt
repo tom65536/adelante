@@ -39,9 +39,11 @@ void packets_or_body() #void :
 {
     LOOKAHEAD([obsoletion() [nl()]] <KW_PACKET>)
     packet() [packets_or_body()]
-    | [uses_clause()]
-      [LOOKAHEAD(bottom_up_part()] bottom_up_part()]
-      root_part()
+    | [uses_clause()] (
+        LOOKAHEAD(bottom_up_part()) bottom_up_part()
+        [root_part()]
+      | root_part()
+      )
 }
 
 // Packets which are not defined in the program file

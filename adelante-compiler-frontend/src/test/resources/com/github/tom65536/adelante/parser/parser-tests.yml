@@ -42,7 +42,7 @@ ast:
           - kind: "<IDENTIFIER>"
             image: a variable
 ---
-title: obsolete package
+title: obsolete packet
 production: program
 source: |
   OBSOLETE BECAUSE renamed as: xxx

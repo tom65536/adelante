@@ -30,8 +30,9 @@ PARSER_END(AdelanteParser)
 void program() #Program :
 {}
 {
-    nl() [packets_or_body()]
-    | packets_or_body()
+    [nl()]
+    [packets_or_body()]
+    <EOF>
 }
 
 void packets_or_body() #void :
@@ -58,7 +59,8 @@ void packet_file() #void :
 {}
 {
     [nl()]
-    packet_only()
+    packet()
+    <EOF>
 }
 
 // The bundle file "_bundle.pkt" describes the
@@ -71,7 +73,14 @@ void bundle_file() #BundleFile :
     (uses_clause())*
     (packet_requires())*
     (documentation())*
-    (expression_synonym())*
+    (bundle_file_decl() nl())*
+    <EOF>
+}
+
+void bundle_file_decl() #void :
+{}
+{
+    expression_synonym()
 }
 
 // Packets are containers for code intended to be
@@ -83,14 +92,6 @@ void packet() #Packet :
     packet_head()
     [packet_body()]
     packet_tail()
-}
-
-void packet_only() #Packet :
-{}
-{
-    packet_head()
-    [packet_body()]
-    packet_tail_eof()
 }
 
 void packet_head() #void :
@@ -133,13 +134,6 @@ void packet_tail() #BlockTail :
 {}
 {
     (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()] nl()
-}
-
-void packet_tail_eof() #BlockTail :
-{}
-{
-    (<KW_END> <KW_PACKET> | <KW_ENDPACKET>) [identifier_ref()]
-    (<NL>)* <EOF>
 }
 
 void packet_body() #void :
@@ -660,8 +654,7 @@ void refinement() #Refinement :
 void paragraph() #Paragraph :
 {}
 {
-    unit() nl()
-    [LOOKAHEAD(2) paragraph()]
+    (LOOKAHEAD(2) unit() nl())+
 }
 
 void unit() #void :
@@ -1269,12 +1262,34 @@ void documentation() #Documentation :
 {}
 {
     <KW_DOC> [<DOCUMENTATION>] nl()
+    | example()
 }
 
 void reason() #Reason :
 {}
 {
     <KW_BECAUSE> <DOCUMENTATION>
+}
+
+void example() #Example :
+{}
+{
+    example_head()
+    packets_or_body()
+    example_tail()
+}
+
+void example_head() #void :
+{}
+{
+    <KW_EXAMPLE> [identifier()] nl()
+}
+
+void example_tail() #BlockTail :
+{}
+{
+    (<KW_ENDEXAMPLE> | <KW_END> <KW_EXAMPLE>) [identifier_ref()]
+    nl()
 }
 
 void operator_name() #OperatorName :
@@ -1460,7 +1475,6 @@ void nl() #void :
 {}
 {
     (<NL>)+
-    | <EOF>
 }
 
 void decimal_literal() #IntegerDenotation :
@@ -2587,5 +2601,4 @@ void text_denotation() #TextDenotation :
     | <REAL_LITERAL :
         <MANTISSA> (<EXPONENT>)?
       | <DECIMAL_LITERAL> <EXPONENT> >
- 
 }

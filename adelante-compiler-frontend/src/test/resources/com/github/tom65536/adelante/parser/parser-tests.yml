@@ -12,22 +12,35 @@ production: program
 source: |
   PACKET test
   ENDPACKET test
+
+  INT VAR x :: 1
+  show(x)
+
 ast:
   kind: Program
   children:
   - kind: Packet
+  - kind: Root
+    children:
+    - kind: Paragraph
+      children:
+      - kind: ObjectDecl
+      - kind: ExpressionStatement
 ---
 title: packet file
 production: packet_file
 source: |
   PACKET test
   ENDPACKET rest
+
 ast:
   kind: Packet
 ---
 title: a single identifier
 production: program
-source: a variable
+source: |
+  a variable
+
 ast:
   kind: Program
   children:
@@ -48,6 +61,7 @@ source: |
   OBSOLETE BECAUSE renamed as: xxx
   PACKET yyy
   END PACKET yyy
+
 ast:
   kind: Program
   children:
@@ -73,6 +87,7 @@ source: |
     PUBLIC
     LET pi = 3.14
   END PACKET p
+
 ast:
   kind: Packet
   children:
@@ -90,6 +105,7 @@ source: |
   ' line 2
   PACKET p
   ENDPACKET p
+
 ast:
   kind: Packet
   children:
@@ -113,6 +129,7 @@ source: |
 
   OBSOLETE PROC Buggy Algorithm(INT CONST N)
   END PROC
+
 ast:
   kind: Program
   children:
@@ -129,6 +146,7 @@ source: |
   END PACKET
 
   INT VAR y :: 0
+
 ---
 title: a _bundle.pkt file
 production: bundle_file
@@ -146,6 +164,7 @@ source: |
     '   Author:["P. Master", "master@acme.com"]
     ' ]
   LET version = Version:[1, 0, 0]
+
 ast:
   kind: BundleFile
   children:
@@ -153,9 +172,9 @@ ast:
   - kind: PacketRequires
   - kind: Documentation
   - kind: ExpressionSynonym
-#  - kind: ExpressionSynonym
-#  - kind: ExpressionSynonym
-#  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
 
     
 

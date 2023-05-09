@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.io.ByteOrderMark;
@@ -32,11 +33,29 @@ public class UnicodeReader extends Reader {
     private transient Charset charset;
 
     /**
+     * Text to be apoended.
+     */
+    private transient String appended;
+
+    /**
      * Initialize a new instance of the {@link UnicodeReader} class.
      *
      * @param raw the input stream to be wrapped.
      */
     public UnicodeReader(final InputStream raw) {
+        this(raw, null);
+    }
+
+    /**
+     * Initialize a new instance of the {@link UnicodeReader} class.
+     * 
+     * @param raw the underlying input stream.
+     * @param appended some text to be appended
+     */   
+    public UnicodeReader(
+        final InputStream raw,
+        final String appended
+    ) {
         super(raw);
         this.in = new BOMInputStream(raw,
             false,
@@ -44,6 +63,7 @@ public class UnicodeReader extends Reader {
             ByteOrderMark.UTF_16BE,
             ByteOrderMark.UTF_16LE
         );
+        this.appended = appended;
     }
 
     /**
@@ -71,6 +91,12 @@ public class UnicodeReader extends Reader {
                         charset = (in.hasBOM())
                         ? Charset.forName(in.getBOM().getCharsetName())
                         : StandardCharsets.UTF_8;
+                        var in_app = new SequenceInputStream(
+                            in,
+                            new ByteArrayInputStream(
+                                appended.getBytes(charset)
+                            )
+                        );
                         delegateReader = new InputStreamReader(in, charset);
                     } catch (IllegalCharsetNameException ex) {
                         throw new IOException(ex);

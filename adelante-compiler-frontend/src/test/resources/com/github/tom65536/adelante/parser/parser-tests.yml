@@ -1,0 +1,198 @@
+%YAML 1.2
+---
+title: empty program file
+production: program
+source: ""
+ast:
+  kind: Program
+  children: []
+---
+title: program with packet
+production: program
+source: |
+  PACKET test
+  ENDPACKET test
+
+  INT VAR x :: 1
+  show(x)
+ast:
+  kind: Program
+  children:
+  - kind: Packet
+  - kind: Root
+    children:
+    - kind: Paragraph
+      children:
+      - kind: ObjectDecl
+      - kind: ExpressionStatement
+---
+title: packet file
+production: packet_file
+source: |
+  PACKET test
+  ENDPACKET rest
+ast:
+  kind: Packet
+---
+title: a single identifier
+production: program
+source: |
+  a variable
+
+ast:
+  kind: Program
+  children:
+  - kind: Root
+    children:
+    - kind: Paragraph
+      children:
+      - kind: ExpressionStatement
+        children:
+        - kind: IdentifierRef
+          tokens:
+          - kind: "<IDENTIFIER>"
+            image: a variable
+---
+title: obsolete packet
+production: program
+source: |
+  OBSOLETE BECAUSE renamed as: xxx
+  PACKET yyy
+  END PACKET yyy
+
+ast:
+  kind: Program
+  children:
+    - kind: Packet
+      children:
+      - kind: Obsoletion
+        children:
+        - kind: Reason
+          tokens:
+          - kind: "\"BECAUSE\""
+          - kind: "<DOCUMENTATION>"
+            image: " renamed as: xxx"
+      - kind: Identifier
+        tokens:
+        - kind: "<IDENTIFIER>"
+          image: yyy
+      - kind: BlockTail
+---
+title: packet with body
+production: packet
+source: |
+  PACKET p
+    PUBLIC
+    LET pi = 3.14
+  END PACKET p
+ast:
+  kind: Packet
+  children:
+  - kind: Identifier
+  - kind: Decl
+    children:
+    - kind: PublicModifier
+    - kind: ExpressionSynonym
+  - kind: BlockTail
+---
+title: obsolete package with reason
+production: packet_file
+source: |
+  OBSOLETE BECAUSE line 1
+  ' line 2
+  PACKET p
+  ENDPACKET p
+ast:
+  kind: Packet
+  children:
+  - kind: Obsoletion
+    children:
+    - kind: Reason
+      tokens:
+      - kind: "\"BECAUSE\""
+      - kind: "<DOCUMENTATION>"
+        image: " line 1\n' line 2"
+  - kind: Identifier
+  - kind: BlockTail
+---
+title: obsolete packet and obsolete proc
+production: program
+source: |
+  # a comment
+
+  OBSOLETE PACKET old fashioned
+  END PACKET
+
+  OBSOLETE PROC Buggy Algorithm(INT CONST N)
+  END PROC
+ast:
+  kind: Program
+  children:
+  - kind: Packet
+  - kind: Decl
+    children:
+    - kind: Obsoletion
+    - kind: ProcedureDecl
+---
+title: packet file with extra stuff should fail
+production: packet_file
+source: |
+  PACKET X
+  END PACKET
+
+  INT VAR y :: 0
+---
+title: a _bundle.pkt file
+production: bundle_file
+source: |
+  USES bundle tools
+  REQUIRES adelante extension x
+  DOC This bundle provides ...
+    '
+    ' KNOWN BUGS
+    '
+    ' * packet `foo` is still buggy
+  LET name = "extra samples"
+  LET scope = "tom65536"
+  LET authors = Authors:[
+    '   Author:["P. Master", "master@acme.com"]
+    ' ]
+  LET version = Version:[1, 0, 0]
+ast:
+  kind: BundleFile
+  children:
+  - kind: PacketUsage
+  - kind: PacketRequires
+  - kind: Documentation
+  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
+  - kind: ExpressionSynonym
+---
+title: use clauses
+production: program
+source: |
+  USES absolute lib, pkt: other lib
+  USES ../tools/geom (triangle AS tri), rad
+ast:
+  kind: Program
+  children:  
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+      children:
+      - kind: Identifier
+        tokens:
+        - image: "absolute lib"
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+    - kind: PacketRefPart
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+    - kind: UseRename
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+      

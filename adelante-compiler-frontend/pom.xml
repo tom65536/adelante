@@ -24,6 +24,12 @@
       <artifactId>testng</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -60,31 +66,24 @@
         <artifactId>build-helper-maven-plugin</artifactId>
       </plugin>
       <plugin>
-  <groupId>org.jacoco</groupId>
-  <artifactId>jacoco-maven-plugin</artifactId>
-  <executions>
-  	<execution>
-      	<id>prepare-agent</id>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
             <goals>
-             <goal>prepare-agent</goal>
+              <goal>prepare-agent</goal>
             </goals>
-      </execution>
-      <execution>
+          </execution>
+          <execution>
             <id>report</id>
             <phase>test</phase>
-               <goals>
-               <goal>report</goal>
-               </goals>
-        </execution>
-    </executions>
- </plugin>
-      <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-      <!--plugin>
-        <artifactId>maven-site-plugin</artifactId>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin-->
     </plugins>
   </build>
 

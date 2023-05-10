@@ -187,9 +187,11 @@ ast:
   - kind: PacketUsage
     children:
     - kind: PacketRefPart
+    - kind: PacketRefPart
   - kind: PacketUsage
     children:
     - kind: PacketRefPart
+    - kind: UseRename
   - kind: PacketUsage
     children:
     - kind: PacketRefPart

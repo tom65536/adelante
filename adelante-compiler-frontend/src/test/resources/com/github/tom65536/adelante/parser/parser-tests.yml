@@ -87,7 +87,6 @@ source: |
     PUBLIC
     LET pi = 3.14
   END PACKET p
-
 ast:
   kind: Packet
   children:

@@ -88,7 +88,7 @@ public class ParserTestScenario {
      */
     public void check(final AdelanteParser parser) throws IOException {
         final var raw = new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8));
-        final var reader = new UnicodeReader(raw);
+        final var reader = new UnicodeReader(raw, "\n");
         parser.ReInit(reader);
 
         try {

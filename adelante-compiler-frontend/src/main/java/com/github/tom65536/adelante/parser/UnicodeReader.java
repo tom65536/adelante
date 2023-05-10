@@ -1,17 +1,17 @@
 package com.github.tom65536.adelante.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.SequenceInputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.io.ByteOrderMark;
-
 
 /**
  * Implementation of an {@link InputStreamReader} respecting the BOM.
@@ -28,7 +28,7 @@ public class UnicodeReader extends Reader {
     private transient Reader delegateReader;
 
     /**
-     * Characterset  determined by the BOM.
+     * Characterset determined by the BOM.
      */
     private transient Charset charset;
 
@@ -48,22 +48,20 @@ public class UnicodeReader extends Reader {
 
     /**
      * Initialize a new instance of the {@link UnicodeReader} class.
-     * 
-     * @param raw the underlying input stream.
-     * @param appended some text to be appended
-     */   
+     *
+     * @param raw      the underlying input stream.
+     * @param appendix some text to be appended
+     */
     public UnicodeReader(
-        final InputStream raw,
-        final String appended
-    ) {
+            final InputStream raw,
+            final String appendix) {
         super(raw);
         this.in = new BOMInputStream(raw,
-            false,
-            ByteOrderMark.UTF_8,
-            ByteOrderMark.UTF_16BE,
-            ByteOrderMark.UTF_16LE
-        );
-        this.appended = appended;
+                false,
+                ByteOrderMark.UTF_8,
+                ByteOrderMark.UTF_16BE,
+                ByteOrderMark.UTF_16LE);
+        this.appended = appendix;
     }
 
     /**
@@ -89,15 +87,15 @@ public class UnicodeReader extends Reader {
                 if (delegateReader == null) {
                     try {
                         charset = (in.hasBOM())
-                        ? Charset.forName(in.getBOM().getCharsetName())
-                        : StandardCharsets.UTF_8;
-                        var in_app = new SequenceInputStream(
-                            in,
-                            new ByteArrayInputStream(
-                                appended.getBytes(charset)
-                            )
-                        );
-                        delegateReader = new InputStreamReader(in, charset);
+                                ? Charset.forName(in.getBOM().getCharsetName())
+                                : StandardCharsets.UTF_8;
+                        var inApp = (appended != null)
+                            ? (new SequenceInputStream(
+                                in,
+                                new ByteArrayInputStream(
+                                        appended.getBytes(charset))))
+                            : in;
+                        delegateReader = new InputStreamReader(inApp, charset);
                     } catch (IllegalCharsetNameException ex) {
                         throw new IOException(ex);
                     }
@@ -122,12 +120,10 @@ public class UnicodeReader extends Reader {
      * {@inheritDoc}
      */
     public int read(
-        final char[] cbuf,
-        final int off,
-        final int len
-    ) throws IOException {
+            final char[] cbuf,
+            final int off,
+            final int len) throws IOException {
         return ensureDelegate().read(
-            cbuf, off, len
-        );
+                cbuf, off, len);
     }
 }

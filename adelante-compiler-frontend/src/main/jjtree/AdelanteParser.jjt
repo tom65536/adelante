@@ -40,7 +40,7 @@ void packets_or_body() #void :
 {
     LOOKAHEAD([obsoletion() [nl()]] <KW_PACKET>)
     packet() [packets_or_body()]
-    | [uses_clause()] (
+    | (uses_clause())* (
         LOOKAHEAD(bottom_up_part()) bottom_up_part()
         [root_part()]
       | root_part()
@@ -175,7 +175,7 @@ void packet_usage() #PacketUsage :
 //     e.g. tom65536/adelante extras:crypto/aes256
 // You can hide files from being treated as packets by
 // preceeding the file name with an underscore or dot.
-void packet_ref() :
+void packet_ref() #void :
 {}
 {
     abs_packet_ref() [":" abs_packet_ref()]

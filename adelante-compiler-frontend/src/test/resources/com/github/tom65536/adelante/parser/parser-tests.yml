@@ -15,7 +15,6 @@ source: |
 
   INT VAR x :: 1
   show(x)
-
 ast:
   kind: Program
   children:
@@ -32,7 +31,6 @@ production: packet_file
 source: |
   PACKET test
   ENDPACKET rest
-
 ast:
   kind: Packet
 ---
@@ -104,7 +102,6 @@ source: |
   ' line 2
   PACKET p
   ENDPACKET p
-
 ast:
   kind: Packet
   children:
@@ -128,7 +125,6 @@ source: |
 
   OBSOLETE PROC Buggy Algorithm(INT CONST N)
   END PROC
-
 ast:
   kind: Program
   children:
@@ -145,7 +141,6 @@ source: |
   END PACKET
 
   INT VAR y :: 0
-
 ---
 title: a _bundle.pkt file
 production: bundle_file
@@ -163,7 +158,6 @@ source: |
     '   Author:["P. Master", "master@acme.com"]
     ' ]
   LET version = Version:[1, 0, 0]
-
 ast:
   kind: BundleFile
   children:
@@ -174,7 +168,29 @@ ast:
   - kind: ExpressionSynonym
   - kind: ExpressionSynonym
   - kind: ExpressionSynonym
-
-    
-
+---
+title: use clauses
+production: program
+source: |
+  USES absolute lib, pkt: other lib
+  USES ../tools/geom (triangle AS tri), rad
+ast:
+  kind: Program
+  children:  
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+      children:
+      - kind: Identifier
+        tokens:
+        - image: "absolute lib"
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
+  - kind: PacketUsage
+    children:
+    - kind: PacketRefPart
       

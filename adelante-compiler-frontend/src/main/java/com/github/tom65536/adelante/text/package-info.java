@@ -1,0 +1,3 @@
+/**
+ * Text manipulation utilities.
+ */

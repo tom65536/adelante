@@ -1,12 +1,21 @@
 package com.github.tom65536.adelante.text;
 
 import java.text.Normalizer;
+import java.util.regex.Pattern;
 
 
 /**
  * Contains routines for normalizing token representations.
  */
 public final class TokenNormalizer {
+
+    /**
+     * Matches sequences of medial characters.
+     */
+    public static final Pattern MEDIAL_MATCHER = Pattern.compile(
+        "(\\p{Zs}|\u200C|\u200D|_)+"
+    );
+
     /**
      * Hide default constructor.
      */
@@ -27,8 +36,8 @@ public final class TokenNormalizer {
      * @param img the token image
      * @return the nirmalized token
      */
-    public static String normalizeIdentifier(final CharacterSequence img) {
-        var norm = Normalizer.normalize(img, Normalizer.Form.NKFC);
-        return "";
+    public static String normalizeIdentifier(final CharSequence img) {
+        var norm = Normalizer.normalize(img, Normalizer.Form.NFKC);
+        return MEDIAL_MATCHER.matcher(norm).replaceAll("_");
     }
 }

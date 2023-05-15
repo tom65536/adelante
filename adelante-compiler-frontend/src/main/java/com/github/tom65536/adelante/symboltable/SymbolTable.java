@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.tom65536.adelante.parser.Token;
+import com.github.tom65536.adelante.text.TokenNormalizer;
 
 /**
  * Symbol table implementation.
@@ -34,14 +35,25 @@ public class SymbolTable {
         private Entry next = null;
 
         /**
+         * The kind of declaration.
+         */
+        private final DeclarationType kind;
+
+        /**
          * Initialize a new entry.
          *
          * @param aToken the defining token.
          * @param aPacketName the name of the defining packet or file
+         * @param aKind the kind of declaration
          */
-        public Entry(final Token aToken, final String aPacketName) {
+        public Entry(
+            final Token aToken,
+            final String aPacketName,
+            final DeclarationType aKind
+        ) {
             this.token = aToken;
             this.packetName = aPacketName;
+            this.kind = aKind;
         }
 
         /**
@@ -69,6 +81,15 @@ public class SymbolTable {
          */
         public Entry getNext() {
             return next;
+        }
+
+        /**
+         * Get the kind of declaration.
+         *
+         * @return the kind of declaration.
+         */
+        public DeclarationType getKind() {
+            return kind;
         }
     }
 
@@ -131,5 +152,22 @@ public class SymbolTable {
             }
         }
         return packetName;
+    }
+
+    /**
+     * Report whether a symbol can be added to the current scope.
+     *
+     * @param token the defining token
+     * @param kind the kind of declaration to be added
+     * @return true if the symbol can be added, false otherwise
+     */
+    public boolean canAdd(final Token token, final DeclarationType kind) {
+        final String id = TokenNormalizer.normalizeIdentifier(token.image);
+        final Entry existing = entries.get(id);
+        if (existing == null) {
+            return true;
+        }
+
+        return (kind == existing.getKind()) && kind.isOverloadable();
     }
 }

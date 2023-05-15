@@ -18,12 +18,37 @@ public class SymbolTable {
         private final Token token;
 
         /**
+         * The packet name at the defining position.
+         */
+        private final String packetName;
+
+        /**
          * Initialize a new entry.
          *
          * @param aToken the defining token.
+         * @param aPacketName the name of the defining packet or file
          */
-        public Entry(final Token aToken) {
+        public Entry(final Token aToken, final String aPacketName) {
             this.token = aToken;
+            this.packetName = aPacketName;
+        }
+
+        /**
+         * Get the defining token.
+         *
+         * @return the defining token.
+         */
+        public Token getToken() {
+            return token;
+        }
+
+        /**
+         * Get the name of the defining packet.
+         *
+         * @return a packet or file name.
+         */
+        public String getPacketName() {
+            return packetName;
         }
     }
 
@@ -31,6 +56,11 @@ public class SymbolTable {
      * Parent scope.
      */
     private final transient SymbolTable parent;
+
+    /**
+     * The current packet or file name.
+     */
+    private String packetName = null;
 
     /**
      * Initialize a new symbol table.
@@ -51,4 +81,29 @@ public class SymbolTable {
         this.parent = aParent;
     }
 
+    /**
+     * Set the current packet name.
+     *
+     * @param aName the new name.
+     */
+    public void setPacketName(final String aName) {
+        this.packetName = aName;
+    }
+
+    /**
+     * Get the current packet name.
+     *
+     * If the packet name is not set in the current scope
+     * this method recursively traverses the parent scopes.
+     *
+     * @return the current packet or file name.
+     */
+    public String getPacketName() {
+        if (packetName == null) {
+            if (parent != null) {
+                return parent.getPacketName();
+            }
+        }
+        return packetName;
+    }
 }

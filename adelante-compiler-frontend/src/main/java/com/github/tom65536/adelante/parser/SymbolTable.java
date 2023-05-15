@@ -1,6 +1,9 @@
 
 package com.github.tom65536.adelante.symboltable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.github.tom65536.adelante.parser.Token;
 
 /**
@@ -21,6 +24,14 @@ public class SymbolTable {
          * The packet name at the defining position.
          */
         private final String packetName;
+
+        /**
+         * Overloading definitions.
+         *
+         * Must be null unless this entry refers to
+         * procedures or operators.
+         */
+        private Entry next = null;
 
         /**
          * Initialize a new entry.
@@ -61,6 +72,12 @@ public class SymbolTable {
      * The current packet or file name.
      */
     private String packetName = null;
+
+    /**
+     * Stored symbol definitions.
+     */
+    private final Map<String, Entry> entries =
+        new HashMap<String, Entry>();
 
     /**
      * Initialize a new symbol table.

@@ -61,6 +61,15 @@ public class SymbolTable {
         public String getPacketName() {
             return packetName;
         }
+
+        /**
+         * Get the next overloaded definition.
+         *
+         * @return the next overloaded definition
+         */
+        public Entry getNext() {
+            return next;
+        }
     }
 
     /**

@@ -2,6 +2,8 @@
 package com.github.tom65536.adelante.symboltable;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.github.tom65536.adelante.parser.Token;
@@ -155,6 +157,40 @@ public class SymbolTable {
     }
 
     /**
+     * Look up a symbol.
+     *
+     * @param id the normalized identifier to be looked up.
+     * @return a list of all matching definitions.
+     */
+    public List<Entry> lookup(final String id) {
+        final List<Entry> result = new LinkedList<Entry>();
+        lookup(result, id);
+        return result;
+    }
+
+    /**
+     * Look up a token of an identifier.
+     *
+     * @param token the identifier token.
+     * @return a list of all matching definitions.
+     */
+    public List<Entry> lookup(final Token token) {
+        final String id = TokenNormalizer.normalizeIdentifier(token.image);
+        return lookup(id);
+    }
+
+    private void lookup(final List<Entry> result, final String id) {
+        final Entry existing = entries.get(id);
+        if (existing != null) {
+            result.add(existing);
+        }
+
+        if (parent != null) {
+            parent.lookup(result, id);
+        }
+    }
+
+    /**
      * Report whether a symbol can be added to the current scope.
      *
      * @param token the defining token
@@ -162,12 +198,39 @@ public class SymbolTable {
      * @return true if the symbol can be added, false otherwise
      */
     public boolean canAdd(final Token token, final DeclarationType kind) {
-        final String id = TokenNormalizer.normalizeIdentifier(token.image);
-        final Entry existing = entries.get(id);
-        if (existing == null) {
+        final List<Entry> existing = lookup(token);
+        if (existing.isEmpty()) {
             return true;
         }
 
-        return (kind == existing.getKind()) && kind.isOverloadable();
+        if (!kind.isOverloadable()) {
+            return false;
+        }
+
+        return existing.stream()
+            .map(Entry::getKind)
+            .allMatch(it -> it == kind);
+    }
+
+    /**
+     * Add a symbol to the symbol table.
+     *
+     * @param token the defining token
+     * @param kind the declaration kind
+     * @throws IllegalArgumentException if the symbol cannot be added.
+     */
+    public void add(final Token token, final DeclarationType kind)
+        throws IllegalArgumentException {
+        final String id = TokenNormalizer.normalizeIdentifier(token.image);
+        final Entry existing = entries.get(id);
+        final Entry newEntry = new Entry(token, getPacketName(), kind);
+        if (existing == null) {
+            entries.put(id, newEntry);
+            return;
+        }
+        if (existing.kind == kind && kind.isOverloadable()) {
+            entries.put(id, newEntry);
+        }
+
     }
 }

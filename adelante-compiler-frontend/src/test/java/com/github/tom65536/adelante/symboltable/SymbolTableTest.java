@@ -22,6 +22,8 @@ package com.github.tom65536.adelante.symboltable;
  * #L%
  */
 
+ import org.testng.annotations.Test;
+
 /**
  * Tests for the {@link SymbolTable} class.
  */

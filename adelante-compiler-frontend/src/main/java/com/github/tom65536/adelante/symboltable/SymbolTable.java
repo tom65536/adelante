@@ -147,7 +147,7 @@ public class SymbolTable {
      *
      * @param aParent the parent scope.
      */
-    public SymbolTable(final SymbolTable aParent) {
+    protected SymbolTable(final SymbolTable aParent) {
         this.parent = aParent;
     }
 
@@ -253,5 +253,23 @@ public class SymbolTable {
             entries.put(id, newEntry);
         }
 
+    }
+
+    /**
+     * Get the parent table.
+     *
+     * @return the parent table or {@code null}.
+     */
+    public SymbolTable getParent() {
+        return parent;
+    }
+
+    /**
+     * Create a new symbol table whose parent is this table.
+     *
+     * @return the created child parent table
+     */
+    public SymbolTable createChild() {
+        return new SymbolTable(this);
     }
 }

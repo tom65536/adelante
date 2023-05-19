@@ -22,11 +22,52 @@ package com.github.tom65536.adelante.symboltable;
  * #L%
  */
 
- import org.testng.annotations.Test;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+import com.github.tom65536.adelante.parser.AdelanteParserConstants;
+import com.github.tom65536.adelante.parser.Token;
+import com.github.tom65536.adelante.symboltable.DeclarationType;
+import com.github.tom65536.adelante.symboltable.SymbolTable;
 
 /**
  * Tests for the {@link SymbolTable} class.
  */
-public class SymbolTableTest {
+public class SymbolTableTest
+    implements AdelanteParserConstants
+{
+    /**
+     * Add some symbols and check the lookup.
+     */
+    @Test
+    public void testAddAndLookup() {
+        final SymbolTable root = new SymbolTable();
+        final SymbolTable scope = root.createChild();
+
+        root.add(
+            Token.newToken(IDENTIFIER, "Foo"),
+            DeclarationType.AbstractType
+        );
+
+        root.add(
+            Token.newToken(IDENTIFIER, "add"),
+            DeclarationType.Subroutine
+        );
+
+        scope.add(
+            Token.newToken(IDENTIFIER, "foo"),
+            DeclarationType.Object   
+        );
+
+        scope.add(
+            Token.newToken(IDENTIFIER, "add"),
+            DeclarationType.Subroutine
+        );
+
+        assertFalse(root.canAdd(
+            Token.newToken(IDENTIFIER, "Foo"),
+            DeclarationType.Synonym)
+        );
+    }
 
 }

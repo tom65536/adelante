@@ -22,6 +22,8 @@ package com.github.tom65536.adelante.symboltable;
  * #L%
  */
 
+ import java.util.List;
+
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
@@ -67,6 +69,29 @@ public class SymbolTableTest
         assertFalse(root.canAdd(
             Token.newToken(IDENTIFIER, "Foo"),
             DeclarationType.Synonym)
+        );
+
+        assertFalse(scope.canAdd(
+            Token.newToken(IDENTIFIER, "Foo"),
+            DeclarationType.Subroutine)
+        );
+        
+        assertTrue(root.canAdd(
+            Token.newToken(IDENTIFIER, "foo"),
+            DeclarationType.Subroutine)
+        );
+
+        List<SymbolTable.Entry> entries = scope.lookup(
+            Token.newToken(IDENTIFIER, "Foo")
+        );
+
+        assertEquals(entries.size(), 1);
+
+        var entry = entries.get(0);
+
+        assertEquals(
+            entry.getKind(),
+            DeclarationType.AbstractType
         );
     }
 

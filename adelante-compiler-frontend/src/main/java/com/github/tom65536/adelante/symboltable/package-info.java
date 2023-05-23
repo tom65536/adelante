@@ -1,7 +1,7 @@
 /**
- * JavaCC generated parser and AST.
+ * Symbol table implementation.
  */
-package com.github.tom65536.adelante.parser;
+package com.github.tom65536.adelante.symboltable;
 
 /*-
  * #%L

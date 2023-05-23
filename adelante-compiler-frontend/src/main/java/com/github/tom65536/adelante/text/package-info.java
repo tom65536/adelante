@@ -1,7 +1,8 @@
+
 /**
- * JavaCC generated parser and AST.
+ * Text processing utilities.
  */
-package com.github.tom65536.adelante.parser;
+package com.github.tom65536.adelante.text;
 
 /*-
  * #%L

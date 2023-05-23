@@ -243,16 +243,10 @@ public class SymbolTable {
     public void add(final Token token, final DeclarationType kind)
         throws IllegalArgumentException {
         final String id = TokenNormalizer.normalizeIdentifier(token.image);
-        final Entry existing = entries.get(id);
         final Entry newEntry = new Entry(token, getPacketName(), kind);
-        if (existing == null) {
-            entries.put(id, newEntry);
-            return;
-        }
-        if (existing.kind == kind && kind.isOverloadable()) {
-            entries.put(id, newEntry);
-        }
 
+        newEntry.next = entries.get(id);
+        entries.put(id, newEntry);
     }
 
     /**

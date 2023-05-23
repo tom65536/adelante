@@ -22,7 +22,7 @@ package com.github.tom65536.adelante.symboltable;
  * #L%
  */
 
- import java.util.List;
+import java.util.List;
 
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -46,6 +46,8 @@ public class SymbolTableTest
         final SymbolTable root = new SymbolTable();
         final SymbolTable scope = root.createChild();
 
+        root.setPacketName("pack");
+
         root.add(
             Token.newToken(IDENTIFIER, "Foo"),
             DeclarationType.AbstractType
@@ -59,6 +61,11 @@ public class SymbolTableTest
         scope.add(
             Token.newToken(IDENTIFIER, "foo"),
             DeclarationType.Object   
+        );
+
+        scope.add(
+            Token.newToken(IDENTIFIER, "add"),
+            DeclarationType.Subroutine
         );
 
         scope.add(
@@ -92,6 +99,29 @@ public class SymbolTableTest
         assertEquals(
             entry.getKind(),
             DeclarationType.AbstractType
+        );
+
+        assertEquals(
+            entry.getToken().image,
+            "Foo"
+        );
+
+        assertEquals(
+            entry.getPacketName(),
+            "pack"
+        );
+
+        assertEquals(
+            scope.getParent(),
+            root
+        );
+
+        entries = scope.lookup("foo");
+        entry = entries.get(0);
+
+        assertNotEquals(
+            entry.getNext(),
+            0
         );
     }
 

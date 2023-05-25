@@ -8,6 +8,7 @@ options {
    TRACK_TOKENS = true;
    STATIC = false;
    VISITOR = true;
+   VISITOR_DATA_TYPE = "com.github.tom65536.adelante.context.CompilerContext";
    UNICODE_INPUT = true;
    USER_CHAR_STREAM = false;
 }

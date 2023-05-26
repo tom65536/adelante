@@ -1,5 +1,5 @@
 
-package com.github.tom65536.adelante.context;
+package com.github.tom65536.adelante.message;
 
 /*-
  * #%L

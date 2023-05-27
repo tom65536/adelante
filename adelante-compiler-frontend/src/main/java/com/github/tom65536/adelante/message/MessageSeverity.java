@@ -26,7 +26,7 @@ package com.github.tom65536.adelante.message;
 /**
  * Enumeration of severities of compiler messages.
  */
-public enum CompilerMessageSeverity {
+public enum MessageSeverity {
     /**
      * Reports a condition of the compiler
      * or the code that the user

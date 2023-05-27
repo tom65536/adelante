@@ -22,30 +22,47 @@ package com.github.tom65536.adelante.message;
  */
 
 /**
- * A rule that may be violated by some offending code.
+ * Enumeration of builtin rules.
  */
-public interface Rule {
+public enum BuiltinRule implements Rule {
     /**
-     * Get a unique rule ID.
+     * Parse exceptions.
      *
-     * @return the rule ID.
+     * The offending code does not comply with
+     * the gramnar definition.
      */
-    String getId();
+    PAR(MessageCategory.ERROR_PRONE, MessageSeverity.ERROR);
 
     /**
-     * Get the rule category.
-     *
-     * @return the rule category
+     * The message category.
      */
-    MessageCategory getCategory();
+    private final MessageCategory category;
 
     /**
-     * Get the rule default severity.
-     *
-     * The default severit may be overwritten
-     * by some cobfiguration.
-     *
-     * @return the default severity.
+     * The default severity dor this rule.
      */
-    MessageSeverity getDefaulSeverity();
+    private final MessageSeverity defaultSeverity;
+
+    BuiltinRule(
+        final MessageCategory aCategory,
+        final MessageSeverity aSeverity
+    ) {
+        category = aCategory;
+        defaultSeverity = aSeverity;
+    }
+
+    @Override
+    public String getId() {
+        return name();
+    }
+
+    @Override
+    public MessageCategory getCategory() {
+        return category;
+    }
+
+    @Override
+    public MessageSeverity getDefaulSeverity() {
+        return defaultSeverity;
+    }
 }

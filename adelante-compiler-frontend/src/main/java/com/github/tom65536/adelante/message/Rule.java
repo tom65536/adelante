@@ -47,5 +47,5 @@ public interface Rule {
      *
      * @return the default severity.
      */
-    MessageSeverity getDefaulSeverity();
+    MessageSeverity getDefaultSeverity();
 }

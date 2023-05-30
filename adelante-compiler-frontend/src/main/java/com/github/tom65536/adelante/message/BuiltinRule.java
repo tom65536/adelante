@@ -62,7 +62,7 @@ public enum BuiltinRule implements Rule {
     }
 
     @Override
-    public MessageSeverity getDefaulSeverity() {
+    public MessageSeverity getDefaultSeverity() {
         return defaultSeverity;
     }
 }
